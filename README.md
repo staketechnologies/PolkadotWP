@@ -59,15 +59,34 @@ an alternative problem; it does not provide an alternative solution.
 従って、スケールする分散コンピュートシステムを開発する合理的な打ち手はコンセンサスアーキテクチャーをstate-transitionメカニズムから切り離すことであることは明らかであるかのように見える。そして、驚くことではないかもしれないが、これがPolkadotがスケーリングソリューションである所以なのだ。
 
 ### 2.1 プロトコル、実装、ネットワーク
-Bitcoin、Ethereumと同じように、Polkadotはネットワークプロトコルとそのプロトコルで動くパブリックネットワークであると言及される。 PolkadotはCreative Commons licenseでコードはFLOSS licenseの下、無料でオープンなプロジェクトを意図して作成されている。オープンソースで開発されているこのプロジェクトは誰であれコントリビューションを行うことができる。RFCsのシステムは、Python Enhancement Proposalsと同じようにプロトコルの変更やアップデートにあたり公開された形で共同開発できるように設計されている。
+Bitcoin、Ethereumと同じように、Polkadotはネットワークプロトコルとそのプロトコルで動くパブリックネットワークであると言及される。 PolkadotはCreative Commons licenseでコードはFLOSS licenseの下、無料でオープンなプロジェクトを意図して作成されている。オープンソースで開発されているこのプロジェクトは誰であれコントリビューションを行うことができる。RFCsのシステムは、Python Enhancement Proposalsと同じようにプロトコルの変更やアップデートにあたり公開された形で共同開発できるように設計されている。APIを含むPolkadotプロトコルの私達の最初の実装はParity Polkadot Platformとして知られることとなるだろう。Parityの他のブロックチェーンの実装と同じようにPPPはパブリックブロックチェーンやプライベート/コンソーシアムブロックチェーンに限らず汎用目的ブロックチェーン技術として開発されており、開発はイギリス政府を含むいくつかの団体からの補助金を基に行われている。このペーパーは言うまでもなくパブリックネットワーク下でPolkadotを描写している。パブリックネットワークで私達が思い描く機能は他のネットワーク（例：パブリックor/andプライベート）の上位互換である。さらに、この文脈でPolkadotの全容がさらにはっきり明記され議論することもできるだろう。これはつまり、読者があるメカニズムのどれがPolkadotに関連しているか、いつパブリックでない環境にデプロイされたかなどを注意しなければならないということである。
 
-Our initial implementation of the Polkadot protocol
-will be known as the Parity Polkadot Platform and will
-include a full protocol implementation together with API
-bindings. Like other Parity blockchain implementations,
-PPP is designed to be a general-purpose blockchain technology stack, neither uniquely for a public network nor for
-private/consortium operation. The development of it thus
-far has been funded by several parties including through
-a grant from the British government.
+### 2.2. 先行研究
+コンセンサスをstate-transitionから切り離す方法というのは正式にではないが、少なくても2年間は提唱され続けている。この方法の提唱者であるMax KayeはEthereumのかなり初期のメンバーでもあった。2014年6月にまでさかのぼりその次の年に公開されたChain fibersとして知られる複雑なスケーラブルソリューションは単体のRelay-cahinと透明性の高いインターチェーン処理メカニズムを提供する混合の複数のチェーンチェーンを実装した。Decoherence was paid for
+through transaction latency—transactions requiring the coordination of disparate portions of the system would
+take longer to process. Polkadotはその大部分のデザインと設計は異なるものの、アーキテクチャーの多くは参考にしている。Polkadotと比べうるシステムは実際のところ存在していないけれど、他のいくつかのシステムで結局は些細な部分であるが類似点が提案されているということもある。それらの提案をブレイクダウンするとグローバルに一貫性のあるstate machineを細かくしたものである。
+
+#### 2.2.1. lobal Stateのないシステム
+Factomは適切な検証なしの正当さとデータの同期を許すことによる効率さを実証したシステムである。
+
+Because of the avoidance of global state and the difficulties
+with scaling which this brings, it can be considered a scalable solution. However, as mentioned previously, the set
+of problems it solves is strictly and substantially smaller.
+
+Tangleはコンセンサスシステムに対する斬新なアプローチである。
+Rather than arranging transactions into blocks and forming consensus over a strictly linked list to give a globally canonical ordering of state-changes, it largely abandons the idea of a heavily structured ordering and instead
+pushes for a directed acyclic graph of dependent transactions with later items helping canonicalise earlier items
+through explicit referencing. For arbitrary state-changes,
+this dependency graph would quickly become intractable,
+however for the much simpler UTXO model2
+this becomes quite reasonable. Because the system is only loosely coherent and transactions are generally independent of each
+other, a large amount of global parallelism becomes quite
+natural. 
+
+Using the UTXO model does have the effect
+of limiting Tangle to a purely value-transfer “currency”
+system rather than anything more general or extensible.
+Furthermore without the hard global coherency, interaction with other systems—which tend to need an absolute
+degree knowledge over the system state—becomes impractical.
 
 https://polkadot.network/PolkaDotPaper.pdf
