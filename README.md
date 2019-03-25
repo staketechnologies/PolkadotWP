@@ -44,6 +44,30 @@ parties and applications be addressed to a nearoptimal degree under the same fra
 
 **適応性**: 技術が必要としているニーズにあっているか？現実のアプリケーションとのギャップを埋めるために"ミドルウェア"が必要か？
 
-現時点では、私達は最初の2つの問題に着手するつもりであるが、Polkadotのフレームワークがこれらの問題に多大な改善をもたらすことができると信じている。Parity Ethereumのような実用的なブロックチェーンの実装は、性能の良いハードウェアを用いると秒回3000トランザクションを超える処理が可能である。しかし、現実のブロックチェーンネットワークでは秒間30トランザクションに制限されている。この制限は主に同期を取るコンセンサスメカニズムが安全性のために時間を要するように設計されている。
+現時点では、私達は最初の2つの問題に着手するつもりであるが、Polkadotのフレームワークがこれらの問題に多大な改善をもたらすことができると信じている。Parity Ethereumのような実用的なブロックチェーンの実装は、性能の良いハードウェアを用いると秒回3000トランザクションを超える処理が可能である。しかし、現実のブロックチェーンネットワークでは秒間30トランザクションに制限されている。この制限は主に同期を取るコンセンサスメカニズムが、安全性のために時間を要するように設計されているから存在している。これは根底にあるコンセンサスアーキテクチャーによるものである。state transition mechanismはトランザクションを収集し処理する過程で様々な正当性や歴史に同意をとり、かつ「同期」するメカニズムである。
+
+このシステムはproof-of-work (PoW)システムで可動しているBitcoinやEthereumや、proofof-stake (PoS)で可動しているNXTやBitsharesにも同じく適応できる。（注、EthereumはPoSに移行）これらはどれも同じハンディーキャップを抱えている。この問題を解決できればブロックチェーンが更に良いものになることは間違いないが、これらの2つのメカニズムを1つのプロトコルで扱うには、リスクやスケーラビリティ能力、プライバシー要求が異なる様々な全く別の主体やアプリケーションを一緒に扱わなければならない。One size does not fit all. Too often it is the case that in a
+desire for broad appeal, a network adopts a degree of conservatism which results in a lowest-common-denominator
+optimally serving few and ultimately leading to a failing
+in the ability to innovate, perform and adapt, sometimes
+dramatically so.
+
+Factomのようないくつかのシステムはstatetransitionメカニズムを取り入れていない。しかし、However, much of the
+utility that we desire requires the ability to transition state according to a shared state-machine. Dropping it solves
+an alternative problem; it does not provide an alternative solution.
+
+従って、スケールする分散コンピュートシステムを開発する合理的な打ち手はコンセンサスアーキテクチャーをstate-transitionメカニズムから切り離すことであることは明らかであるかのように見える。そして、驚くことではないかもしれないが、これがPolkadotがスケーリングソリューションである所以なのだ。
+
+### 2.1 プロトコル、実装、ネットワーク
+Bitcoin、Ethereumと同じように、Polkadotはネットワークプロトコルとそのプロトコルで動くパブリックネットワークであると言及される。 PolkadotはCreative Commons licenseでコードはFLOSS licenseの下、無料でオープンなプロジェクトを意図して作成されている。オープンソースで開発されているこのプロジェクトは誰であれコントリビューションを行うことができる。RFCsのシステムは、Python Enhancement Proposalsと同じようにプロトコルの変更やアップデートにあたり公開された形で共同開発できるように設計されている。
+
+Our initial implementation of the Polkadot protocol
+will be known as the Parity Polkadot Platform and will
+include a full protocol implementation together with API
+bindings. Like other Parity blockchain implementations,
+PPP is designed to be a general-purpose blockchain technology stack, neither uniquely for a public network nor for
+private/consortium operation. The development of it thus
+far has been funded by several parties including through
+a grant from the British government.
 
 https://polkadot.network/PolkaDotPaper.pdf
