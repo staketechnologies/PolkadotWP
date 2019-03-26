@@ -89,4 +89,24 @@ system rather than anything more general or extensible.
 Furthermore without the hard global coherency, interaction with other systems—which tend to need an absolute
 degree knowledge over the system state—becomes impractical.
 
+### 2.2.2. Heterogeneous Chain Systems
+サイドチェーンはBitcoinプロトコルで提案された追加仕様であり、メインのビットコインと追加となるサイドチェーン間でトラストレスなやりとりを可能にするプロトコルである。サイドチェーン間での"濃い”やりとりは想定されていない。つまり、やりとりは制限されており両者のアセットの交換点（2 way peg点）で管理者が存在する。The end vision is for a framework where the Bitcoin currency could be provided with additional, if peripheral, functionality through pegging it onto some other chains with more exotic state transition
+systems than the Bitcoin protocol allows. この意味で、サイドチェーンはスケーラビリティというよりはむしろ拡張性をもたらすものである。
+
+もちろん、サイドチェーンの正当性に関しては根本的に用意されたものはなにもない。一つのチェーン（例：Bitcoin）上のトークンはマイナーに正当な正しいトランザクションを検証してもらうというサイドチェーンの能力によってのみ安全性が担保されている。Bitcoinのネットワークの安全性を他のブロックチェーンに移植することは簡単にできることではない。さらに、Bitcoinのマージマイニングを行うためのプロトコルはこのペーパーの対象外である。
+
+CosmosはNakamoto PoWコンセンサスメソッドをJae KwonのTendermintアルゴリズムに変えたマルチチェーンシステムである。本質的には、Tendermintの個々のインスタンスを使ってZoneで運営されるマルチチェーンがmaster hub cahinを介しトレストフリーコミュニケーションを可能にする。このインターチェーンコミュニケーションは任意の情報というよりはデジタル・アセット（またの名をトークン）の移動に制限されている。しかし、そのようなインターチェーンコミュニケーションはdataの受け渡しも可能であるといえば可能である。
+
+
+
+Validator sets for the zoned chains, and in particular
+the means of incentivising them, are, like side-chains, left
+as an unsolved problem. The general assumption is that
+each zoned chain will itself hold a token of value whose inflation is used to pay for validators. Still in the early stages
+of design, at present the proposal lacks comprehensive details over the economic means of achieving the scalable
+certainty over global validity. However, the loose coherence required between the zones and the hub will allow
+for additional flexibility over the parameters of the zoned
+chains compared to that of a system enforcing stronger
+coherence
+
 https://polkadot.network/PolkaDotPaper.pdf
