@@ -6,6 +6,10 @@ DR. GAVIN WOOD
 FOUNDER, ETHEREUM & PARITY
 GAVIN@PARITY.IO
 
+翻訳者：
+- Sota Watanabe（Twitter @WatanabeSota）
+- Masaki Minamide (Twitter @raika_5179)
+
 ## 概要
 現在のブロックチェーンアーキテクチャーは拡張性やスケーラビリティに留まらず、様々な問題点を抱えている。私達はこの理由を、簡潔さと正当性という2つのコンセンサスアーキテクチャーの重要な2つの要素が密接に絡むことに起因すると考えている。このペーパーでは、この2つの要素を合わせた混合のマルチチェーンのアーキテクチャを紹介する。
 
@@ -89,7 +93,7 @@ system rather than anything more general or extensible.
 Furthermore without the hard global coherency, interaction with other systems—which tend to need an absolute
 degree knowledge over the system state—becomes impractical.
 
-### 2.2.2. Heterogeneous Chain Systems
+#### 2.2.2. Heterogeneous Chain Systems
 サイドチェーンはBitcoinプロトコルで提案された追加仕様であり、メインのビットコインと追加となるサイドチェーン間でトラストレスなやりとりを可能にするプロトコルである。サイドチェーン間での"濃い”やりとりは想定されていない。つまり、やりとりは制限されており両者のアセットの交換点（2 way peg点）で管理者が存在する。The end vision is for a framework where the Bitcoin currency could be provided with additional, if peripheral, functionality through pegging it onto some other chains with more exotic state transition
 systems than the Bitcoin protocol allows. この意味で、サイドチェーンはスケーラビリティというよりはむしろ拡張性をもたらすものである。
 
@@ -97,16 +101,23 @@ systems than the Bitcoin protocol allows. この意味で、サイドチェー�
 
 CosmosはNakamoto PoWコンセンサスメソッドをJae KwonのTendermintアルゴリズムに変えたマルチチェーンシステムである。本質的には、Tendermintの個々のインスタンスを使ってZoneで運営されるマルチチェーンがmaster hub cahinを介しトレストフリーコミュニケーションを可能にする。このインターチェーンコミュニケーションは任意の情報というよりはデジタル・アセット（またの名をトークン）の移動に制限されている。しかし、そのようなインターチェーンコミュニケーションはdataの受け渡しも可能であるといえば可能である。
 
+Validator sets for the zoned chains, and in particular the means of incentivising them, are, like side-chains, left as an unsolved problem. 一般的な予測では、各々のZoneチェーン自体でトークンを保有しており、その上昇価値がバリデーターに還元される。未だに、まだ初期のデザインなので、一貫性のある詳細を確認することはできないが、ZoneとHub間のゆるい一貫性はZoneチェーンのパラメーターに柔軟性を出すだろうと考えられる。
 
+#### 2.2.3. Casper
+2つの内1つがもう一方を不要にするという見解があるが、PolkadotとCasperに関する包括的な比較はまだ存在しない。Casperはどちらのフォークしたチェーンが正当になるのかについてPoSアルゴリズムによって参加者が賭けをした記録に基づいている。Substantial consideration was given to ensuring that it be robust to network forks, even when prolonged, and have some additional degree of scalability on top of the basic Ethereum model. なので、Casperは本質的にPolkadotや派生系よりも複雑なモデルであると言えるかもしれない。いかにCasperが将来発展するのか最終的にどのような形でデプロイされるのかは依然として不明である。
 
-Validator sets for the zoned chains, and in particular
-the means of incentivising them, are, like side-chains, left
-as an unsolved problem. The general assumption is that
-each zoned chain will itself hold a token of value whose inflation is used to pay for validators. Still in the early stages
-of design, at present the proposal lacks comprehensive details over the economic means of achieving the scalable
-certainty over global validity. However, the loose coherence required between the zones and the hub will allow
-for additional flexibility over the parameters of the zoned
-chains compared to that of a system enforcing stronger
-coherence
+CasperもPolkadotも両者とも興味深い新しいプロトコルを提案している。そして、いくつかの点でEthereumの究極の目的と開発方向が食い違っている。CasperはEthereum Foundationが手動するプロジェクトで、元々は完全なスケーリングを意図しないプロトコルのPoSへの仕様変更であった。重要なことに、それはEthereumのすべてのクライアントにアップデートを要求するハードフォークであった。なので、開発は強い連携が必要であった分散プロジェクトを継承したものよりも本質的にさらに複雑になった。
 
+Polkadot differs in several ways; first and foremost,
+Polkadot is designed to be a fully extensible and scalable
+blockchain development, deployment and interaction test
+bed. It is built to be a largely future-proof harness able to
+assimilate new blockchain technology as it becomes available without over-complicated decentralised coordination
+or hard forks. We already envision several use cases such
+as encrypted consortium chains and high-frequency chains
+with very low block times that are unrealistic to do in
+any future version of Ethereum currently envisioned. Finally, the coupling between it and Ethereum is extremely
+loose; no action on the part of Ethereum is necessary to
+enable trustless transaction forwarding between the two
+networks.
 https://polkadot.network/PolkaDotPaper.pdf
