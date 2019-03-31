@@ -108,6 +108,7 @@ Validator sets for the zoned chains, and in particular the means of incentivisin
 
 CasperもPolkadotも両者とも興味深い新しいプロトコルを提案している。そして、いくつかの点でEthereumの究極の目的と開発方向が食い違っている。CasperはEthereum Foundationが手動するプロジェクトで、元々は完全なスケーリングを意図しないプロトコルのPoSへの仕様変更であった。重要なことに、それはEthereumのすべてのクライアントにアップデートを要求するハードフォークであった。なので、開発は強い連携が必要であった分散プロジェクトを継承したものよりも本質的にさらに複雑になった。
 
+Polkadotはいくつかの点で異なる。まず、
 Polkadot differs in several ways; first and foremost,
 Polkadot is designed to be a fully extensible and scalable
 blockchain development, deployment and interaction test
