@@ -6,8 +6,8 @@
 - できるだけ原文に忠実に翻訳しましたが、あくまでサイドプロジェクトとして進めているため誤訳が含まれる可能性があります。気軽にIssueを立ててください。
 
 # 翻訳者
-- Sota Watanabe（Twitter @WatanabeSota）
-- Masaki Minamide (Twitter @raika_5179)
+- Sota Watanabe（Twitter [@WatanabeSota](https://twitter.com/WatanabeSota?lang=en)）
+- Masaki Minamide (Twitter [@raika_5179](https://twitter.com/raika_5179?lang=en))
 
 
 

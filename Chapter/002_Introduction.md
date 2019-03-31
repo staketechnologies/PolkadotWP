@@ -72,17 +72,6 @@ Validator sets for the zoned chains, and in particular the means of incentivisin
 
 CasperもPolkadotも両者とも興味深い新しいプロトコルを提案している。そして、いくつかの点でEthereumの究極の目的と開発方向が食い違っている。CasperはEthereum Foundationが手動するプロジェクトで、元々は完全なスケーリングを意図しないプロトコルのPoSへの仕様変更であった。重要なことに、それはEthereumのすべてのクライアントにアップデートを要求するハードフォークであった。なので、開発は強い連携が必要であった分散プロジェクトを継承したものよりも本質的にさらに複雑になった。
 
-Polkadotはいくつかの点で異なる。まず、
-Polkadot differs in several ways; first and foremost,
-Polkadot is designed to be a fully extensible and scalable
-blockchain development, deployment and interaction test
-bed. It is built to be a largely future-proof harness able to
-assimilate new blockchain technology as it becomes available without over-complicated decentralised coordination
-or hard forks. We already envision several use cases such
-as encrypted consortium chains and high-frequency chains
-with very low block times that are unrealistic to do in
-any future version of Ethereum currently envisioned. Finally, the coupling between it and Ethereum is extremely
-loose; no action on the part of Ethereum is necessary to
-enable trustless transaction forwarding between the two
-networks.
-https://polkadot.network/PolkaDotPaper.pdf
+Polkadotはいくつかの点で異なる。まず、第一にPolkadotは完全に拡張性が高くとスケーラブルなブロックチェーン開発である。It is built to be a largely future-proof harness able to assimilate new blockchain technology as it becomes available without over-complicated decentralised coordination or hard forks. 私達は秘匿化されたコンソーシアムチェーンの運用運用やEthereumでは想定できないようなブロック生成時間の短いチェーンなどすでにいくつかのユースケースを想定している。最後に、PolkadotとEthereum間の結合は極めてゆるい。2つのネットワーク間でトラストレスなやり取りをすることができる。
+
+一言で言うと、Casper/Ethereum 2.0とPolkadotはかすかに類似点を持つけれども、目的地が明らかに異なると考えている。そして、近い将来、競合するというよりはむしろ、相互に恩恵のある形で併存することになるだろう。
