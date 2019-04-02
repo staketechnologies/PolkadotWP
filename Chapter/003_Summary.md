@@ -11,19 +11,24 @@ Polkadotはその上に、萌芽期のアイデアから熟練したデザイン
 
 私達はBitcoin or Z-cashのような保守的で、高価値が乗っているチェーンが価値が乗っていない“theme-chains” （マーケティング目的や遊びで作ったもの）と0ないしほぼ0料金のテストネットと共存すると考えている。また、完全に暗号化された"暗い"コンソーシアムチェーンが、機能性に長けオープンであるEthereumのようなチェーンとですら繋がると考えている。成熟したEthereumや型が定義されているBitcoinのようなチェーンから計算難易度の高い計算をアウトソースされたWASMチェーンといった実験的なVMベースですら共存するだろう。
 
-チェーンのアップグレードを管理するために、Polkadotは固有のガバナンス構造をサポートしている。
+チェーンのアップグレードを管理するために、Polkadotはできるだけ既存のシステムとYellow peperでいうCouncilと類似した2院制に基づいた固有のガバナンス構造をサポートしている。
 
-To manage chain upgrades, Polkadot will inherently
-support some sort of governance structure, likely based
-on existing stable political systems and having a bicameral aspect similar to the Yellow Paper Council [24]. As
-the ultimate authority, the underlying stakable token holders would have “referendum” control. To reflect the users’
-need for development but the developers’ need for legitimacy, we expect a reasonable direction would be to form
-the two chambers from a “user” committee (made up of
-bonded validators) and a “technical” committee made up
-of major client developers and ecosystem players. The
-body of token holders would maintain the ultimate legitimacy and form a supermajority to augment, reparameterise, replace or dissolve this structure, something we
-don’t doubt the eventual need for: in the words of Twain
-“Governments and diapers must be changed often, and for
-the same reason”.
+絶対的な権限としてトークンホルダーは"一般投票"をコントロールするを持つ。ユーザーの開発ニーズだけではなく、開発者のニーズを満たすために、私達は、バリデーターによる"ユーザー"の議会と開発者とエコシステムの参加者によって成り立つ"技術的な"議会"の2つが良い方向へ導いてくれることを期待している。トークンホルダーの核は絶対の正当性を保持し、多数の意見を増強したり、パラメーターで示したり、取替えたり、分解したりすることだ。Twainの言葉を借りれば、"政府とおむつはよく取り替えなければいけない。どちらも同じ理由で。" である。
 
-https://polkadot.network/PolkaDotPaper.pdf
+一方で、パラメータを再構成するのは、
+Whereas reparameterisation is typically trivial to arrange within a larger consensus mechanism, more qualitative changes such as replacement and augmentation would likely need to be either non-automated “soft-decrees” (e.g. through the canonicalisation of a block number and the hash of a document formally specifying the new protocol)
+or necessitate the core consensus mechanism to contain a
+sufficiently rich language to describe any aspect of itself
+which may need to change. The latter is an eventual aim,
+however, the former more likely to be chosen in order to
+facilitate a reasonable development timeline.
+Polkadot’s primary tenets and the rules within which
+we evaluate all design decisions are:
+
+最小限であること: Polkadotはできるだけ少ない機能で実装する
+
+シンプル: 一般的にミドルウェア、Parachainもしくは後の実装に負荷をかけるベースプロトコルの複雑さを最小限に抑える
+
+一般的であること: 不要な実装を避ける。制約や限界をParachainに設ける。Polkadotはどのモデルが一番堅牢かを最適化するコンセンサスシステム開発の基盤であるべきである。
+
+堅牢であること: Polkadotは根本的に安定したベースレイヤーであるべきである。経済的な側面に加え、高いインセンティブをもつ攻撃の可能性を最小化する分散システムであることを意味する。
