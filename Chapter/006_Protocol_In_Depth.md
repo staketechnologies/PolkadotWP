@@ -1,7 +1,9 @@
 # 6. プロトコルの詳細
+
 本プロトコルは大きく３つのパートに分解することができる：コンセンサスメカニズム、パラチェーンインターフェイス、インターチェーン取引ルーティング。
 
-## 6.1. リレーチェーンオペレーション.
+## 6.1. リレーチェーンオペレーション
+
 リレーチェーンはイーサリアムと似たように、ステイトがアドレスをアカウント情報（主に残高や取引回数）にマッピングしたステイトベースのチェーンになるだろう。アカウントをここに置くことには目的が一つある：システムで誰がどれだけのステイクを保持しているかを説明すること。そこには大きな違いはない、しかし：
 
 - コントラクトはトランザクションによって配置することはできない。リレーチェーン上のアプリケーション機能を回避したいという欲求から、契約のパブリックデプロイのサポートをしない。
@@ -26,10 +28,11 @@ EVMではない場合、WebAssembly [2]（wasm）バックエンドが最も可�
 
 6.2. ステイキング コントラクト
 このコントラクトは以下のようにバリデータセットを管理する。
-・どのアカウントが現在バリデータであるか（Validators）；
-・どのアカウントがすぐにバリデータになることができるか（Intentions）；
-・どのアカウントがバリデータにノミネートするためにステイクしているか（Stashes）；
-・ステイク量、許容ペイアウト率、アドレス、短期（セッション）アイデンティティを含むそれぞれの特性（Others）；
+
+- どのアカウントが現在バリデータであるか（Validators）；
+- どのアカウントがすぐにバリデータになることができるか（Intentions）；
+- どのアカウントがバリデータにノミネートするためにステイクしているか（Stashes）；
+- ステイク量、許容ペイアウト率、アドレス、短期（セッション）アイデンティティを含むそれぞれの特性（Others）；
 
 それは、アカウントが（その要件と共に）担保付き（bonded）のバリデータになる、ノミネートする、そして既存の担保付きの検証者がこのステータスからエグジットする意思を登録する。またバリデーションと正規化メカニズムのためのメカニズムも含みます。
 
@@ -37,7 +40,6 @@ EVMではない場合、WebAssembly [2]（wasm）バックエンドが最も可�
 ネットワークセキュリティをステークトークンの全体的な「時価総額」に直結させるため、一般に、できるだけ多くのトータルステーキングトークンをネットワークメンテナンス操作内でステークすることが望ましい。これは、通貨のインフレを通し、収益をバリデータとして参加する人々に配ることによって、容易にインセンティブ設計することができる。しかし、そうすることは一つ問題を提起する：トークンがステークコントラクトでロックされるならば、価格向上を実現するためにどのように十分な流動性を維持できるのか？
 
 これに対する1つの答えは、直接的なデリバティブコントラクトを許可し、ステイクされたトークン上で代替可能（Fungible)なトークンを保護することだ。これは信頼できる方法で手配するのが困難だ。さらに、これらのデリバティブトークンは、異なるユーロ圏の国債が代替可能ではないのと同じ理由で同等に扱うことはできない：原資産が破綻し、価値がなくなる可能性がある。ユーロ圏の政府では、これがデフォルトとなるかもしれない。しかしバリデータがステイクしたトークンの場合、バリデータの悪意を持った行動には処罰が伴う。
-
 
 私たちは信条を守りながら、最も単純な解決策を選んだ：全てのトークンはステイクされない。つまりは、ある一定の割合（おそらく20％程度）のトークンが強制的に流動性を維持することを意味する。これはセキュリティの観点からは不完全だが、ネットワークのセキュリティに根本的な違いをもたらすことはまずありえない。ステイクの没収による賠償金の80％と、100％のステークの「完璧なケース」との大差はそれほどない。
 
@@ -49,11 +51,12 @@ EVMではない場合、WebAssembly [2]（wasm）バックエンドが最も可�
 
 6.2.3. 債権の没収/バーン
 特定のバリデーターの振る舞いは賭け金に懲罰的な減少をもたらす。賭け金が許容最小額を下回ると、セッションは途中で終了し、別のセッションが開始される。処罰対象のバリデーターの不正行為のリストには以下が含まれる：
-・パラチェインブロックの有効性についてコンセンサスを提供できないパラチェイングループの一員である
-・無効なパラチェインブロックの有効性について積極的に署名する
-・利用可能として以前に投票されたアウトバウンドペイロードを供給することができない
-・合意プロセス中に非活動的である
-・競合するフォークのリレーチェーンブロックを検証する
+
+- パラチェインブロックの有効性についてコンセンサスを提供できないパラチェイングループの一員である
+- 無効なパラチェインブロックの有効性について積極的に署名する
+- 利用可能として以前に投票されたアウトバウンドペイロードを供給することができない
+- 合意プロセス中に非活動的である
+- 競合するフォークのリレーチェーンブロックを検証する
 
 不正な悪意のある行動のケースによっては、ネットワークの完全性が損なわれ（無効なパラチェインブロックに署名したり、フォークの複数の面を検証したりするなど）、その結果、債権の完全な没収により追い出されることがある。その他の、それほど深刻ではない不正行為（例えば、合意プロセスにおける非活動）または誰の責任か不明瞭である（無効なグループの一部であるなど）場合、代わりに、債権のごく一部の罰金を科されることがある。後者の場合、これはサブグループchurnによって、悪意のあるノードが健全なノードよりより大きな損失を被るようにする。
 
@@ -65,7 +68,8 @@ EVMではない場合、WebAssembly [2]（wasm）バックエンドが最も可�
 
 このようにして、報酬は不正行為を行ったバリデータの債権量を超えないようにする必要がある。これは、検証者が故意的に不正行為を行い、自分自身を通報する事で利益を得ないようにするためである。これへの対処法として、バリデータになるのに最低限の賭け金を必要とすることや、ノミネーターに賭け金が少ないバリデーターは不正行為を行うインセンティブが大きい事実を啓蒙するなどがある。
 
-6.3. パラチェーンレジストリ
+## 6.3. パラチェーンレジストリ
+
 各パラチェインはこのレジストリで定義されている。それは比較的単純なデータベースのような構造であり、そして各チェーンに関する静的な情報と動的な情報の両方を保持する。
 
 静的情報には、異なるクラスのパラチェインを区別する手段である検証プロトコルの識別情報とともに、チェーンインデックス（単純な整数）が含まれる。これによって有効な候補を提示するために委任されたバリデータによって正しい検証アルゴリズムが実行される。
@@ -81,7 +85,8 @@ EVMではない場合、WebAssembly [2]（wasm）バックエンドが最も可�
 
 パラチェーンの削除は、国民投票の後に初めて行われ、スタンドアロンチェーンへの秩序ある移行を可能にするため、または他の何らかの合意システムの一部となるためには、かなりの猶予期間が必要である。猶予期間は数ヶ月程度である可能性があり、異なるパラチェーンがそれぞれの必要性に応じて異なる猶予期間を享受できるようにするために、パラチェインレジストリにチェーンごとで設定される可能性がある。
 
-6.4. リレーブロックのシーリング
+## 6.4. リレーブロックのシーリング
+
 シーリングとは、本質的には正規化のプロセスを指す。つまり、オリジナルを意味のあるものにマッピングする基本的なデータ変換のことである。POWチェーンの下では、シーリングは事実上マイニングの同義語である。私たちの場合、それは特定のリレーチェーンブロックとそれが表すパラチェーンブロックの有効性、可用性、そして正規性に関するバリデータからの署名されたステートメントの収集を意味する。
 
 基礎となるBFTコンセンサスアルゴリズムのメカニズムの説明は今回の範疇外となる。代わりに、合意形成ステートマシンを想定したプリミティブを使って説明する。最終的には、コアにあるいくつかの有望なBFT合意アルゴリズム（Tangaora [9]（Raft [16]のBFT版）、Tendermint [11]、HoneyBadgerBFT [14]）にインスパイアされることを期待している。 このアルゴリズムは、複数のパラチェーンに並行して合意に達する必要があるため、通常のブロックチェーン合意メカニズムとは異なる。一旦合意に達すると、私たちはその合意を反論できない証拠として記録することができ、それは参加者の誰もが提供することができる。我々はまた、処罰に対処する際、プロトコル内の不正行為は一般に不正行為をする参加者を含む小グループにする事により、付随的な被害を最小限に抑えることができると想定している。Tendermint BFTやオリジナルのSlasherなど、既存のPoSベースのBFTコンセンサススキームは、これらの主張を満たしている。
@@ -92,16 +97,16 @@ EVMではない場合、WebAssembly [2]（wasm）バックエンドが最も可�
 
 各参加者のコンセンサスマシンの状態は、単純な（2次元の）表としてモデル化できる。各参加者（バリデータ）は、各パラチェインブロック候補ならびにリレーチェインブロック候補に関して、他の参加者からの署名付きステートメント（Vote）の形式で一組の情報を有する。情報セットは2つ：
 
-・利用可能性（Availability）：このバリデータはこのブロックからのトランザクションの一連の情報を出力していか；故に次のブロックのパラチェイン候補を適切に検証できる。バリデータは1（知られている）か0（まだ知られていない）のどちらかを投票することができる。1を投票した場合、このプロセスの残りの部分についても同様に投票することに一貫する。これに従わない後からの投票は罰の対象となる。
+- 利用可能性（Availability）：このバリデータはこのブロックからのトランザクションの一連の情報を出力していか；故に次のブロックのパラチェイン候補を適切に検証できる。バリデータは1（知られている）か0（まだ知られていない）のどちらかを投票することができる。1を投票した場合、このプロセスの残りの部分についても同様に投票することに一貫する。これに従わない後からの投票は罰の対象となる。
 
-・妥当性（Validity)：このパラチェインブロックは有効であり、全ての外部参照データ（例えばトランザクション）は利用可能か。これは、投票しているパラチェーンに割り当てられているバリデータにのみ関係する。彼らは1（有効）、-1（無効）または0（まだ知られていない）のどれかに投票することができる。彼らがゼロでない(non-zero)投票をしたら、このプロセスの残りの部分についても同様に投票することに一貫する。これに従わない後からの投票は罰の対象となる。
+- 妥当性（Validity)：このパラチェインブロックは有効であり、全ての外部参照データ（例えばトランザクション）は利用可能か。これは、投票しているパラチェーンに割り当てられているバリデータにのみ関係する。彼らは1（有効）、-1（無効）または0（まだ知られていない）のどれかに投票することができる。彼らがゼロでない(non-zero)投票をしたら、このプロセスの残りの部分についても同様に投票することに一貫する。これに従わない後からの投票は罰の対象となる。
 
 すべての検証者が投票を提出する必要がある。票は上記の規則によって修飾され、再提出されることがある。合意の進行は、並行して行われる各パラチェインに対する複数の標準的なBFT合意アルゴリズムとしてモデル化することができる。これらは少数の悪意のあるアクターが1つのパラチェイングループに集中することよって潜在的に妨害される。そのため、バックストップを確立するための全体的なコンセンサスが存在し、１つ以上の向こうパラチェインブロックにデッドロックされる最悪のシナリオを防ぐ。
 
 個々のブロックの有効性のための基本的な規則（はバリデータ全体が、正規のリレーから参照されるユニークなパラチェイン候補になることについて合意に達することを可能にする）：
 
-・少なくとも3分の2のバリデータがポジティブに投票し、誰もネガティブに投票しないこと。
-・3分の1を超えるバリデータが、外に出て行く情報の可用性にポジティブに投票している。
+- 少なくとも3分の2のバリデータがポジティブに投票し、誰もネガティブに投票しないこと。
+- 3分の1を超えるバリデータが、外に出て行く情報の可用性にポジティブに投票している。
 
 正当性について少なくとも1つの正と負の投票がある場合、例外条件が作成され、悪意のある当事者がいるかどうか、または偶然の分岐があるかどうかを判断するためにバリデータのセット全体が投票する必要がある。有効と無効の他に、その両方に対する投票と同等である3番目の種類の投票が許可されている。つまり、ノードには意見の対立がある。これは、ノードの所有者が同意しない複数の実装を実行していることが原因である可能性があり、プロトコルにあいまいさがある可能性があることを示している。
 
@@ -166,30 +171,17 @@ These posts are structured as several FIFO queues; the number of lists is known 
 
 We assume that all participants know the subgroupings for next two blocks n, n + 1. In summary, the routing system follows these stages:
 
- 							
-CollatorS : Contact members of V alidators[n][S]
- 							
-CollatorS: FOR EACH subgroup s: ensure at least 1 member of V alidators[n][s] in contact
-	
-CollatorS : FOR EACH subgroup s: assume egress[n − 1][s][S] is available (all incoming post data to ‘S‘ from last block)
-							
-CollatorS: Compose block candidate b for S: (b.header, b.ext, b.proof, b.receipt, b.egress)
-	
-CollatorS : Send proof information proof[S] = (b.header, b.ext, b.proof, b.receipt) to Validators[n][S] 	
-						
-CollatorS : Ensure external transaction data b.extis made available to other collators and validators
-
-CollatorS : FOR EACH subgroup s: Send egress information egress[n][S][s] = (b.header, b.receipt, b.egress[s]) to the receiving sub-group’s members of next block 
-
-Validators[n + 1][s]
-							
-ValidatorV : Pre-connect all same-set members for next block: let N = Chain[n + 1][V ]; connect all validators v such that Chain[n + 1][v] = N
-
-ValidatorV : Collate all data ingress for this block: FOR EACH subgroup s: Retrieve egress[n − 1][s][Chain[n][V ]], get from other validators v such that Chain[n][v] = Chain[n][V].
-
-Possibly going via randomly selected other validators for proof of attempt.
-• ValidatorV : Accept candidate proofs for this block proof[Chain[n][V ]]. Vote block validity
-• ValidatorV : Accept candidate egress data for next block: FOR EACH subgroup s, accept egress[n][s][N ]. Vote block egress availability; republish among interested validators v such that Chain[n + 1][v] = Chain[n + 1][V ]. • V alidatorV : UNTIL CONSENSUS
+- CollatorS : Contact members of V alidators[n][S]
+- CollatorS: FOR EACH subgroup s: ensure at least 1 member of V alidators[n][s] in contact
+- CollatorS : FOR EACH subgroup s: assume egress[n − 1][s][S] is available (all incoming post data to ‘S‘ from last block)
+- CollatorS: Compose block candidate b for S: (b.header, b.ext, b.proof, b.receipt, b.egress)
+- CollatorS : Send proof information proof[S] = (b.header, b.ext, b.proof, b.receipt) to Validators[n][S]
+- CollatorS : Ensure external transaction data b.extis made available to other collators and validators
+- CollatorS : FOR EACH subgroup s: Send egress information egress[n][S][s] = (b.header, b.receipt, b.egress[s]) to the receiving sub-group’s members of next block Validators[n + 1][s]
+- ValidatorV : Pre-connect all same-set members for next block: let N = Chain[n + 1][V ]; connect all validators v such that Chain[n + 1][v] = N
+- ValidatorV : Collate all data ingress for this block: FOR EACH subgroup s: Retrieve egress[n − 1][s][Chain[n][V ]], get from other validators v such that Chain[n][v] = Chain[n][V]. Possibly going via randomly selected other validators for proof of attempt.
+- ValidatorV : Accept candidate proofs for this block proof[Chain[n][V ]]. Vote block validity
+- ValidatorV : Accept candidate egress data for next block: FOR EACH subgroup s, accept egress[n][s][N ]. Vote block egress availability; republish among interested validators v such that Chain[n + 1][v] = Chain[n + 1][V ]. • V alidatorV : UNTIL CONSENSUS
 
 Where: egress[n][from][to] is the current egress queue information for posts going from parachain ‘from‘, to parachain ‘to‘ in block number ‘n‘. CollatorS is a collator for parachain S. V alidators[n][s] is the set of validators for parachain s at block number n. Conversely, Chain[n][v] is the parachain to which validator v is assigned on block number n. block.egress[to] is the egress queue of posts from some parachain block block whose destination parachain is to.
 
@@ -276,34 +268,27 @@ While Ethereum made progress on current protocol offerings with the devp2p proto
 The requirements for Polkadot are rather more substantial. Rather then a wholly uniform network, Polkadot has several types of participants each with different requirements over their peer makeup and several network “avenues” whose participants will tend to converse about particular data. This means a substantially more structured network overlay—and a protocol supporting that— will likely be necessary. Furthermore, extensibility to facilitate future additions such as new kinds of “chain” may themselves require a novel overlay structure.
 
 While an in-depth discussion of how the networking protocol may look is outside of the scope of this document, some requirements analysis is reasonable. We can roughly break down our network participants into two sets (relay-chain, parachains) each of three subsets. We can also state that each of the parachain participants are only interested in conversing between themselves as opposed to participants in other parachains:
-			
-Relay-chain participants:							
-Validators: P, split into subsets P[s] for each parachain	
-Availability Guarantors: A (this may be represented by Validators in the basic form of the protocol)							
-Relay-chain clients: M (note members of each parachain set will also tend to be members of M)	
-Parachain participants:				
-Parachain Collators: C[0], C[1], . . .		
-Parachain Fishermen: F[0], F[1], . . .		
-Parachain clients: S[0], S[1], . . .			
-Parachain light-clients: L[0], L[1], . . .
+
+- Relay-chain participants:
+- Validators: P, split into subsets P[s] for each parachain	
+- Availability Guarantors: A (this may be represented by Validators in the basic form of the protocol)
+- Relay-chain clients: M (note members of each parachain set will also tend to be members of M)
+- Parachain participants:
+- Parachain Collators: C[0], C[1], . . .
+- Parachain Fishermen: F[0], F[1], . . .
+- Parachain clients: S[0], S[1], . . .
+- Parachain light-clients: L[0], L[1], . . .
 
 In general we name particular classes of communication will tend to take place between members of these sets:
-					
-・P|A <-> P|A: The full set of validators/guarantors must be well-connected to achieve consensus.	
 
-・P[s] <-> C[s] | P[s]: Each validator as a member of a given parachain group will tend to gossip with other such members as well as the collators of that parachain to discover and share block candidates.
-
-• A <-> P[s] | C | A: Each availability guarantor will need to collect consensus-sensitive cross-chain data from the validators assigned to it; collators may also optimise the chance of consensus on their block by advertising it to availability guarantors. Once they have it, the data will be disbursed to other such guarantor to facilitate consensus.
-
-• P[s] <-> A | P[s']: Parachain validators will need to collect additional input data from the previous set of validators or the availability guarantors.
-
-• F[s]<->P:When reporting, fishermen may place a claim with any participant.
-
-• M <-> M | P | A: General relay-chain clients disburse data from validators and guarantors.
-
-• S[s] <-> S[s] | P[s] | A: Parachain clients disburse data from the validator/guarantors.
-
-• L[s] <-> L[s] | S[s]: Parachain light clients disburse data from the full clients.
+- P|A <-> P|A: The full set of validators/guarantors must be well-connected to achieve consensus.
+- P[s] <-> C[s] | P[s]: Each validator as a member of a given parachain group will tend to gossip with other such members as well as the collators of that parachain to discover and share block candidates.
+- A <-> P[s] | C | A: Each availability guarantor will need to collect consensus-sensitive cross-chain data from the validators assigned to it; collators may also optimise the chance of consensus on their block by advertising it to availability guarantors. Once they have it, the data will be disbursed to other such guarantor to facilitate consensus.
+- P[s] <-> A | P[s']: Parachain validators will need to collect additional input data from the previous set of validators or the availability guarantors.
+- F[s]<->P:When reporting, fishermen may place a claim with any participant.
+- M <-> M | P | A: General relay-chain clients disburse data from validators and guarantors.
+- S[s] <-> S[s] | P[s] | A: Parachain clients disburse data from the validator/guarantors.
+- L[s] <-> L[s] | S[s]: Parachain light clients disburse data from the full clients.
 
 To ensure an efficient transport mechanism, a “flat” overlay network—like Ethereum’s devp2p—where each node does not (non-arbitrarily) differentiate fitness of its peers is unlikely to be suitable. A reasonably extensible peer selection and discovery mechanism will likely need to be included within the protocol as well as aggressive planning an lookahead to ensure the right sort of peers are “serendipitously” connected at the right time.
 
@@ -318,5 +303,7 @@ Fishermen, as well as general relay-chain and parachain clients will generally a
 Neither of these are great solutions: long block times being forced upon the network may render it useless for particular applications and chains. Even a perfectly fair and connected network will result in substantial wastage of bandwidth as it scales due to uninterested nodes having to forward data useless to them.
 
 While both directions may form part of the solution, a reasonable optimisation to help minimise latency would be to restrict the volatility of these parachain validator sets, either reassigning the membership only between series of blocks (e.g. in groups of 15, which at a 4 second block time would mean altering connections only once per minute) or by rotating membership in an incremental fashion, e.g. changing by one member at a time (e.g. if there are 15 validators assigned to each parachain, then on average it would be a full minute between completely unique sets). By limiting the amount of peer churn, and ensuring that advantageous peer connections are made well in advance through the partial predictability of parachain sets, we can help ensure each node keep a permanently serendipitous selection of peers.
-					
-6.8.2. Path to an Effective Network Protocol. Likely the most effective and reasonable development effort will focus on utilising a pre-existing protocol rather than rolling our own. Several peer-to-peer base protocols exist that we may use or augment including Ethereum’s own devp2p [22], IPFS’s libp2p [1] and GNU’s GNUnet [4]. A full review of these protocols and their relevance for building a modular peer network supporting certain structural guarantees, dynamic peer steering and extensible sub-protocols is well beyond the scope of this document but will be an important step in the implementation of Polkadot. 
+
+6.8.2. Path to an Effective Network Protocol.
+
+ Likely the most effective and reasonable development effort will focus on utilising a pre-existing protocol rather than rolling our own. Several peer-to-peer base protocols exist that we may use or augment including Ethereum’s own devp2p [22], IPFS’s libp2p [1] and GNU’s GNUnet [4]. A full review of these protocols and their relevance for building a modular peer network supporting certain structural guarantees, dynamic peer steering and extensible sub-protocols is well beyond the scope of this document but will be an important step in the implementation of Polkadot. 
