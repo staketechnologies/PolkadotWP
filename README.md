@@ -1,6 +1,10 @@
 # Polkadot-Whitepaper-JP
 - [POLKADOT: VISION FOR A HETEROGENEOUS MULTI-CHAIN FRAMEWORK DRAFT 1](https://polkadot.network/PolkaDotPaper.pdf)の日本語訳です。
+- 日本語翻訳に関してはPolkadot_JP_Whitepaperから読めます。
 - 著作権とすべてのクレジットは著者であるGavin Wood氏に属します。/ The Credit Goes to Dr.Gavin Wood.
+- 翻訳に関してはPolkadotチームからの了承を得ています。
+- 翻訳による二次的な著作権はTRANSLATORS.mdに書かれている通りです。
+- モチベーション向上の為にStarをください。がんばります。
 
 ## Edit Contribution / 編集のご協力
 - できるだけ原文に忠実に翻訳しましたが、あくまでサイドプロジェクトとして進めているため誤訳が含まれる可能性があります。気軽にIssueを立ててください。
