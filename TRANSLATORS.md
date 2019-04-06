@@ -7,5 +7,5 @@
 - 6 PROTOCOL IN DEPTH by [@raika_5179](https://twitter.com/raika_5179?lang=en))
 - 7 INTERCHAIN TRANSACTION PAYMENT by
 - 8 CONCLUSION by [@raika_5179](https://twitter.com/raika_5179?lang=en))
-- APPENDIX A. FUNCTIONAL COMPONENTS by
-- APPENDIX B. FREQUENTLY ASKED QUESTIONS by
+- APPENDIX A. FUNCTIONAL COMPONENTS by [@raika_5179](https://twitter.com/raika_5179?lang=en))
+- APPENDIX B. FREQUENTLY ASKED QUESTIONS by [@raika_5179](https://twitter.com/raika_5179?lang=en))
