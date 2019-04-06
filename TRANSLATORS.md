@@ -1,11 +1,11 @@
-- ABSTRACT by Sota Watanabe
-- 1 PREFACE by Sota Watanabe
-- 2 INTRODUCTION by Sota Watanabe
-- 3 SUMMARY by Sota Watanabe
-- 4 VALIDATORS by Sota Watanabe
-- 5 DESIGN OVERVIEW
-- 6 PROTOCOL IN DEPTH by Masaki Minamide
-- 7 PRACTICALITIES OF THE PROTOCOL by Masaki Minamide
-- 8 CONCLUSION by Masaki Minamide
-- APPENDIX A. FUNCTIONAL COMPONENTS by Masaki Minamide
-- APPENDIX B. FREQUENTLY ASKED QUESTIONS by Masaki Minamide
+- ABSTRACT by [@WatanabeSota](https://twitter.com/WatanabeSota?lang=en)）
+- 1 PREFACE by [@WatanabeSota](https://twitter.com/WatanabeSota?lang=en)）
+- 2 INTRODUCTION by [@WatanabeSota](https://twitter.com/WatanabeSota?lang=en)）
+- 3 SUMMARY by [@WatanabeSota](https://twitter.com/WatanabeSota?lang=en)）
+- 4 VALIDATORS by [@WatanabeSota](https://twitter.com/WatanabeSota?lang=en)）
+- 5 DESIGN OVERVIEW by [@WatanabeSota](https://twitter.com/WatanabeSota?lang=en)）
+- 6 PROTOCOL IN DEPTH by [@raika_5179](https://twitter.com/raika_5179?lang=en))
+- 7 INTERCHAIN TRANSACTION PAYMENT by
+- 8 CONCLUSION by [@raika_5179](https://twitter.com/raika_5179?lang=en))
+- APPENDIX A. FUNCTIONAL COMPONENTS by [@raika_5179](https://twitter.com/raika_5179?lang=en))
+- APPENDIX B. FREQUENTLY ASKED QUESTIONS by [@raika_5179](https://twitter.com/raika_5179?lang=en))
