@@ -9,19 +9,15 @@ proof-of-authority (PoA)スタイルのネットワークでは、これだけ�
 ## 5.2. 掛け金を証明する
 私達はネットワークに特定のアカウントがいくらの"掛け金"を持っているのかを測る方法があることを想定している。 既存のシステムと比較しやすいように計測する単位を"トークン"とする。この言葉はいくつかの理由で理想的ではない。1つはアカウントに紐付いている値がスカラー値であるとは限らないこと。もう1つは個別のトークンに特有性がないからである。
 
-![]()
+![Summary](https://github.com/stakedtechnologies/PolkadotWP/blob/master/img/summary.png)
 
 私達は、頻度は高くないが（最大でも1日に1回、もしかすると4半期に1回ほど）Nominated Proof-of-Stake (NPoS)によってバリデーターは選出されることを想定している。Incentivisation can happen through a pro-rata allocation of funds coming from a token base expansion (up to 100%
 per year, though more likely around 10%) together with any transaction fees collected. マネタリーベースの膨張は主にインフレーションをもたらすけれども、全てのトークン保有者が参加権をフェアに持つので、時とともに価値がへるという心配をする必要がない。そのことでコンセンサスメカニズムにおけるトークンホルダーの役割を喜んでこなすようになる。トークンの特定の割合がステーキングプロセスのターゲットとなる。効率的なトークンベースの増加（token base expansion）はマーケットベースのメカニズムでこのターゲット値に近づくように調整される。
 
 バリデーターは掛け金によって密接につながっている。バリデーターが掛け金を引き出すことができるのは、バリデーターの責務が終わり時間が経ってからである。（3ヶ月くらい）この長い期間が存在するのは、チェーンのチェックポイントまでバリデーターが将来不正を行った場合罰するためである。報酬額を削減したり、意図的にネットワークを悪化させたり、他のバリデーターに掛け金を渡したりした場合、罰を受けることになる。例えば、バリデーターがフォークした両方のチェーンを承認しようとした場合（しばしばショートレンジアタックと呼ばれる）、後々それが検知され罰せられる。
 
-ロングレンジ“nothing-at-stake”攻撃を
+Long-range “nothing-at-stake” attacks4 are circumvented through a simple “checkpoint” latch which prevents a dangerous chain-reorganisation of more than a particular chain-depth. 新しく同期してきたクライアントが間違ったチェーンに騙さないことを確証するために、バリデーターの掛け金整理のタイミングと同じく定期でハードフォークが行われる。これによって最新のチェックポイントブロックハッシュがクライアントに入る。これは今後、“finite chain length”やジェネシスブロックを定期的にリセットすることによってうまくいくようになる。
 
-Long-range “nothing-at-stake” attacks4
-are circumvented through a simple “checkpoint” latch which prevents a dangerous chain-reorganisation of more than a
-particular chain-depth. To ensure newly-syncing clients
-are not able to be fooled onto the wrong chain, regular
-“hard forks” will occur (of at most the same period of the
-validators’ bond liquidation) that hard-code recent checkpoint block hashes into clients. This plays well with a further footprint-reducing measure of “finite chain length” or
-periodic reseting of the genesis-block.
+## 5.3. Parachainとコレイター
+各parachainはrelay-cahinに近いセキュリティー強度を持つ。paracahinのヘッダーはrelay-chainのブロックに格納されており、再編成や2重支払いがないようにしている。これはBitcoinでいうサイドチェーンとマージマイニングと似たセキュリティー保証である。Polkadotではそれに加え、parachainのstate transactionが正当であるという強い保証を提供する。これは、バリデーターが暗号学的にランダムにサブセットに配属されることを通して行われる。parachainごとにサブセットがあるかもしれなければ、blockごとにサブセットはことなるかもしれない。この設定はparacahinのブロックタイムがrelaycahinのブロックタイムと少なくても同じくらい長いことを示している。この分割の詳しい方法はこの論文の対象外である。しかし、RanDAOに似たcommit-revealフレームワーク、もしくは暗号学的に安全なハッシュ下の各parachainブロックに結合したデータに立脚している可能性が高い。
+
