@@ -21,3 +21,31 @@ Long-range “nothing-at-stake” attacks4 are circumvented through a simple “
 ## 5.3. Parachainとコレイター
 各parachainはrelay-cahinに近いセキュリティー強度を持つ。paracahinのヘッダーはrelay-chainのブロックに格納されており、再編成や2重支払いがないようにしている。これはBitcoinでいうサイドチェーンとマージマイニングと似たセキュリティー保証である。Polkadotではそれに加え、parachainのstate transactionが正当であるという強い保証を提供する。これは、バリデーターが暗号学的にランダムにサブセットに配属されることを通して行われる。parachainごとにサブセットがあるかもしれなければ、blockごとにサブセットはことなるかもしれない。この設定はparacahinのブロックタイムがrelaycahinのブロックタイムと少なくても同じくらい長いことを示している。この分割の詳しい方法はこの論文の対象外である。しかし、RanDAOに似たcommit-revealフレームワーク、もしくは暗号学的に安全なハッシュ下の各parachainブロックに結合したデータに立脚している可能性が高い。
 
+そのようなバリデーターのサブセットは正当だと保証されたparachainのブロック候補を提供することを要求されている。正当性というのは2つの重要なポイントを含む。1つ目は全てのstate transitionsが正確に実行され、全ての参照される外部データが最終的に正当であるということ。
+2つ目は、that any data which is extrinsic to its
+candidate, such as those external transactions, has sufficiently high availability so that participants are able to
+download it and execute the block manually.5 Validators may provide only a “null” block containing no external “transactions” data, but may run the risk of getting a reduced reward if they do. They work alongside
+a parachain gossip protocol with collators—individuals
+who collate transactions into blocks and provide a noninteractive, zero-knowledge proof that the block constitutes a valid child of its parent (and taking any transaction
+fees for their trouble).
+
+parachainのプロトコルにチェーン独自のスパム防止方法を搭載する余地を残している。relay-chainにある“compute-resource metering”もしくは、“transaction fee”という根本的な概念は存在しない。relaychainプロトコルによってこれらが強制されることもない。（しかし、堅牢なメカニズムの用意されていないparachainをステークホルダーが採用することは起こりえないだろう）これはEthereumのようなチェーンと明確に異っている。（例：シンプルなfeeモデルを持つBitcoinのようなチェーンもしくは、スパム防止モデルは提唱されていないがそれ以外）
+
+Polkadotのrelay-chainそれ自体はEtheruemのようなaccounts、stateチェーンとして存在する可能性が高い。もしかすると、EVMの派生系であるかもしれない。relay-cahinのノードはかなりの処理能力、トランザクションスループットが要求されるので、トランザクションスループットは高いトランザクション手数料とブロックサイズリミットによって最小化されるだろう。
+
+## 5.4. インターチェーンコミュニケーション
+Polkadotの重要な最後の要素は、インターチェーンコミュニケーションである。 paracahin間では幾分かのインフォメーションチャネルが存在するので、Polkadotはスケーラブルなマルチチェーンであると私達は考えている。Polkadotの場合、コミュニケーションはできるだけシンプルに設計している。paracahinで処理されるトランザクションは（Chainのロジックによっては）2つ目のparachainもしくは、relay-cahinに発送することができる。商用的なブロックチェーン上の外部トランザクションのように、トランザクションは完全に非同期であり情報をもとの出処に返し継承することはできない。
+
+![transaction](https://github.com/stakedtechnologies/PolkadotWP/blob/sota/img/transaction.jpg)
+
+実装の複雑性、リスク、将来のparachainアーキテクチャーの制限を最小化する為に、これらのインターチェーントランザクションは一般的な外部トランザクションと区別することができない。トランザクションはparacahinを認識することができるオリジナルの要素と任意のサイズのアドレスを持つ。BitcoinやEthereumといった現在の一般的なシステムとは異なり、インターチェーントランザクションでは料金が紐づく"決済"はできない。そのような決済は発生源と目的地のparachain間のネゴシエーションロジックを通して管理されなければならない。Ethereum’s Serenityで提案されているシステムはそのようなクロスチェーン決済を管理する簡単な方法である。
+
+インターチェーントランザクションは正確性を保証するMarkle treeベースの単純な行列メカニズムを使うことによって解決される。1つのparacahinのアウトプット列を目的地のparacahinのインプット列に移動させるのはrelay-cahinのメンテナーの仕事である。その送られたトランザクションはrelay-cahinのトランザクションそれ自体ではなく、relay-chainによって参照される。他のparacahinのトランザクションからparacahinにスパムが送られるのを防ぐために、目的地のインプット列は一番前のブロック列の時よりも大きすぎないようにする必要がある。もしそのインプット列がブロック処理後、大きすぎた場合、それは"仕込まれた"と考えられ、限界値以下に減らさない限り、続くブロックにおいてトランザクションを処理することができなくなる。それらの列はrelay-cahinによって監督され、互いのparachainの状態を監視し合うことができる。なので、不正の目的地にトランザクションが送信された場合、一瞬で報告され目論見は失敗する。(リターンパスが存在しないので、2次トランザクションがこの理由で失敗した場合、オリジナルcallerに報告することができない。他のリカバリー方法が実行される必要がある。） 
+
+## 5.5. PolkadotとEthereum
+Ethereumのチューリング完全性により、お互いにインターオペラビリティを持つ可能性が豊富にあると考えている。少なくても、セキュリティを共有することはできると思う。簡単に言うと、私達はPolkadotからのトランザクションはバリデーターによって署名され、Ethereum上で運用することができ、送信先のコントラクトを起動できるということである。
+ In the other direction,
+we foresee the usage of specially formatted logs (events)
+coming from a “break-out contract” to allow a swift verification that a particular message should be forwarded.
+
+## 5.5.1. PolkadotからEthereum
