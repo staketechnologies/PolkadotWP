@@ -3,8 +3,7 @@
 
 **スケーラビリティ**：単一のトランザクションがシステム上で処理されるまでバンドウィズ、ストレージを含め全体でどれくらいリソースを費やしているか。そして、最大でどれくらいのトランザクションが処理できるか？
 
-**孤立性**: Can the divergent needs of multiple
-parties and applications be addressed to a nearoptimal degree under the same framework?
+**孤立性**: 同じフレームワーク下で複数の参加者、アプリケーションの様々なニーズにどれくらい対処することができるか？
 
 **開発可用性**: ツールがどレくらいよく動くか？APIは開発者のニーズに答えられているか？教育用のツールは整っているか？正しいインテグレーションんがあるか？
 
@@ -20,9 +19,7 @@ optimally serving few and ultimately leading to a failing
 in the ability to innovate, perform and adapt, sometimes
 dramatically so.
 
-Factomのようないくつかのシステムはstatetransitionメカニズムを取り入れていない。しかし、However, much of the
-utility that we desire requires the ability to transition state according to a shared state-machine. Dropping it solves
-an alternative problem; it does not provide an alternative solution.
+Factomのようないくつかのシステムはstatetransitionメカニズムを取り入れていない。しかし、私達が望む用途の多くは共通したstate-machineを持つことによるtransition stateを可能にすることを求められている。
 
 従って、スケールする分散コンピュートシステムを開発する合理的な打ち手はコンセンサスアーキテクチャーをstate-transitionメカニズムから切り離すことであることは明らかであるかのように見える。そして、驚くことではないかもしれないが、これがPolkadotがスケーリングソリューションである所以なのだ。
 
@@ -35,11 +32,7 @@ through transaction latency—transactions requiring the coordination of dispara
 take longer to process. Polkadotはその大部分のデザインと設計は異なるものの、アーキテクチャーの多くは参考にしている。Polkadotと比べうるシステムは実際のところ存在していないけれど、他のいくつかのシステムで結局は些細な部分であるが類似点が提案されているということもある。それらの提案をブレイクダウンするとグローバルに一貫性のあるstate machineを細かくしたものである。
 
 #### 2.2.1. lobal Stateのないシステム
-Factomは適切な検証なしの正当さとデータの同期を許すことによる効率さを実証したシステムである。
-
-Because of the avoidance of global state and the difficulties
-with scaling which this brings, it can be considered a scalable solution. However, as mentioned previously, the set
-of problems it solves is strictly and substantially smaller.
+Factomは適切な検証なしの正当さとデータの同期を許すことによる効率さを実証したシステムである。global stateとスケーリングに紐づくdifficultiesを避けたことにより、スケーラブルなブロックチェーンだとされている。しかし、以前にお話したとおり、これが解決した問題は限定的であり制約がある。
 
 Tangleはコンセンサスシステムに対する斬新なアプローチである。
 Rather than arranging transactions into blocks and forming consensus over a strictly linked list to give a globally canonical ordering of state-changes, it largely abandons the idea of a heavily structured ordering and instead
