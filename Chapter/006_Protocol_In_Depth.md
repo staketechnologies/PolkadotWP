@@ -204,43 +204,44 @@ Chain[n + 1][v] = Chain[n + 1][V ]. • V alidatorV : UNTIL CONSENSUS
 
 照合者は、自分のブロックが正規になったことに基づいて料金を徴収するため、次のブロックの送信先ごとに、サブグループのメンバーに現在のブロックからの出力キューが通知される。バリデータは（パラチェイン）ブロックについてコンセンサスを形成することのみを奨励されている。原則として、バリデータは照合者と忠誠を尽くし、他の照合者のブロックが標準的になる可能性を減らすために共謀することができるが、これはパラチェインのバリデータをランダムに選択するため整理するのが困難であり、合意プロセスを妨げるパラチェインブロックに対して支払うべき料金の減少で擁護される可能性がある。
 
-6.6.1. External Data Availability. Ensuring a parachain’s external data is actually available is a perennial issue with decentralised systems aiming to distribute workload across the network. At the heart of the issue is the availability problem which states that since it is neither possible to make a non-interactive proof of availability nor any sort of proof of non-availability, for a BFT system to properly validate any transition whose correctness relies upon the availability of some external data, the maximum number of acceptably Byzantine nodes, plus one, of the system must attest to the data being available.
+6.6.1.外部データの可用性：Parachainの外部データが実際に利用可能であることを保証することは、ネットワーク全体に作業負荷を分散することを目的とした分散型システムにおける永続的な問題である。この問題の核心は可用性の非対話的な証明も非可用性のいかなる種類の証明も行うことが出来ないので、BFTシステムが正確に何らかの外部のデータの可用性に依存する遷移を適切に検証するためにシステムの許容可能なビサンチンノードの最大数＋１がデータが利用可能であることを述べる可用性の問題である。
 
-For a system to scale out properly, like Polkadot, this invites a problem: if a constant proportion of validators must attest to the availability of the data, and assuming that validators will want to actually store the data before asserting it is available, then how do we avoid the problem of the bandwidth/storage requirements increasing with the system size (and therefore number of validators)? One possible answer would be to have a separate set of validators (availability guarantors), whose order grows sublinearly with the size of Polkadot as a whole. This is described in 6.5.3.
+Polkadotのようにシステムを適切にスケールアウトするには次のような問題が生じる。一定割合のバリデータがデータの可用性を証明しなければならず、バリデータが利用可能であると表明する前に実際にデータを保管したいと考えている場合、システムのサイズ（バリデータの数）に伴って帯域幅・ストレージ要件が増大するという問題をどのように回避すれば良いのか。その答えとして考えられるのは、別のバリデータのセット（可用性保証人）を用意することである。これについては6.5.3で説明する。
 
-We also have a secondary trick. As a group, collators have an intrinsic incentive to ensure that all data is available for their chosen parachain since without it they are unable to author further blocks from which they can collect transaction fees. Collators also form a group, membership of which is varied (due to the random nature of parachain validator groups) non-trivial to enter and easy to prove. Recent collators (perhaps of the last few thousand blocks) are therefore allowed to issue challenges to the availability of external data for a particular parachain block to validators for a small bond.
+二次的なトリックもある。グループとして、collators(照合者）は選択したパラチェイン全てのデータが利用可能であることを保証する特有のインセンティブを持っている。なぜならデータがなければ取引手数料を収集するためのブロックを作成することが出来ないからである。collatorsもグループを形成するが、そのメンバーは様々で（Parachain バリデータグループのランダムな性質による）、簡単に入ることはできず、簡単に証明できる。したがって最近のcollators（おそらく最後の数千ブロック）は特定のParachainブロックの外部データの可用性に対するchallengesを、少ないbondでバリデータに発行することができる。
 
-Validators must contact those from the apparently offending validator sub-group who testified and either acquire and return the data to the collator or escalate the matter by testifying to the lack of availability (direct refusal to provide the data counts as a bond-confiscating offence, therefore the misbehaving validator will likely just drop the connection) and contacting additional validators to run the same test. In the latter case, the collator’s bond is returned.
+バリデータは明らかに違反しているバリデータのサブグループのメンバと連絡をとり、データを取得してcollatorに返すか、escalate the matter by testifying to the lack of availability（データを提供することを直接拒否することは、bondを没収する犯罪であり、よって不正行為を行ったバリデータは単に接続を切断する可能性が高い）、同じテストを実行するために別のバリデータに連絡する必要がある。後者の場合はcollatorのbondは返される。
 
-Once a quorum of validators who can make such nonavailability testimonials is reached, they are released, the misbehaving sub-group is punished, and the block reverted.
+このような可用性のない証言を作ることができるバリデータのquorum(分散システムにおいて、分散トランザクションが処理を実行するために必要な最低限の票の数）が限界に達すると、それらは解放され、不正なサブグループは罰せられ、ブロックは元に戻される。
 
-6.6.2. Posts Routing. Each parachain header includes an egress-trie-root; this is the root of a trie containing the routing-base bins, each bin being a concatenated list of egress posts. Merkle proofs may be provided across parachain validators to prove that a particular parachain’s block had a particular egress queue for a particular destination parachain.
+6.6.2ポストルーティング。各parachainヘッダには”egress-trie-root”が含まれている。これは”routing-base-bins”を含む、トライのルートであり、各binは出力ポストの連結されたリストである。特定のパラチェーンのブロックが特定の宛先のパラチェーンの特定の出力キューを有していたことを証明するために、マークル証明をパラチェーンバリデータ全体に提供することができる。
 
-At the beginning of processing a parachain block, each other parachain’s egress queue bound for said block is merged into our block’s ingress queue. We assume strong, probably CSPR9, sub-block ordering to achieve a deterministic operation that offers no favouritism between any parachain block pairing. Collators calculate the new queue and drain the egress queues according to the parachain’s logic.
+パラチェーンブロックの処理の開始時にそのブロックにバインドされている他のパラチェーンの出力キューはブロックの入力キューにマージされる。どのパラチェーンブロックペア間にも有利性を提供しない決定論的演算を達成するために、CSPR9サブブロック順序付けを強く仮定した。Collatorは新しいキューを計算し、parachainのロジックに出力キューを排出する。
 
-The contents of the ingress queue is written explicitly into the parachain block. This has two main purposes: firstly, it means that the parachain can be trustlessly synchronised in isolation from the other parachains. Secondly, it simplifies the data logistics should the entire ingress queue not be able to be processed in a single block; validators and collators are able to process following blocks without having to source the queue’s data specially.
+入力キューの内容は、parachainブロックに明示的に書き込まれる。これには主に２つの目的がある。第一にparachainは他のparachainから分離して信頼できるように同期化できることを意味する。第二にもし入り口キュー全体が単一ブロックで処理できないなら、データロジスティックを単純化する。バリデータとcollatorsは特にキューのデータソースを保持することなくブロックを処理することができる。
 
-If the parachain’s ingress queue is above a threshold amount at the end of block processing, then it is marked saturated on the relay-chain and no further messages may be delivered to it until it is cleared. Merkle proofs are used to demonstrate fidelity of the collator’s operation in the parachain block’s proof.
+もしparachainの入力キューがブロック処理の終了時に閾値を超えている場合、リレーチェーンで飽和とマークされ、クリアされるまでそれ以上のメッセージはこない。マークル証明はparachainブロック証明におけるcollatorの動作の忠実性を実証するために使用される。
 
-6.6.3. Critique. One minor flaw relating to this basic mechanism is the post-bomb attack. This is where all parachains send the maximum amount of posts possible to a particular parachain. While this ties up the target’s ingress queue at once, no damage is done over and above a standard transaction DoS attack.
+6.6.3 批評この基本的なメカニズムに関連する小さな欠陥の一つはpost-bomb attackである。これは全てのパラチェーンが特定のパラチェーンに可能な最大量のpostを送ることである。これによりターゲットの入力キューが一度に結び付けられるが、標準的なDosアタック以上の被害は発生しない。
 
-Operating normally, with a set of well-synchronised and non-malicious collators and validators, for N parachains, N × M total validators and L collators per parachain, we can break down the total data pathways per block to:
+N個のparachain、N✖️M個の合計バリデータ、およびparachainごとのL個のcollatorsについて、よく同期された悪意のない一連のcollatorsおよびバリデータを用いて正常に動作することにより、ブロックごとの合計データ経路を以下のように分類することができる。
 
-Validator: M −1+L+L: M −1 for the other validators in the parachain set, L for each collator providing a candidate parachain block and a second L for each collator of the next block requiring the egress payloads of the previous block. (The latter is actually more like worst-case operation since it is likely that collators will share such data.)
+バリデータ：M-1+L+L: M-1はParachainセット内の他のバリデータ用であり、候補parachainブロックを提供する各collator用のLと、前のブロックの出力ペイロードを必要とする次のブロックの各collator用の第２のLである。後者は、実際には最悪の場合の操作に似ている。これはCollatorがそのようなデータを共有する可能性が高いからである。
 
-Collator: M + kN : M for a connection to each relevant parachain block validator, kN for seeding the egress payloads to some subset of each parachain validator group for the next block (and possibly some favoured collator(s)).
+Collator:M+kN:Mは関連する各Parachainブロックバリデータへの接続用、kNは次のブロックの各parachainバリデータの一部のサブセットへの出力ペイロードのシード用である。（といくつかの好ましいcollators)
 
-As such, the data path ways per node grow linearly with the overall complexity of the system. While this is reasonable, as the system scales into hundreds or thousands of parachains, some communication latency may be absorbed in exchange for a lower complexity growth rate. In this case, a multi-phase routing algorithm may be used in order to reduce the number of instantaneous pathways at a cost of introducing storage buffers and latency.
+よってノードごとのデータ：パスの方法はシステム全体の複雑さに比例して増加する。これは理に通ってるがシステムが数百、数千のParachainにスケールすると複雑性の増加率を低くする代わりに、ある程度の通信遅延が吸収される可能性がある。この場合、記憶バッファ及び待ち時間を導入するコストで瞬時経路の数を減少させるために、”multi-phase roouting algorithm”を使用される。
 
-6.6.4. Hyper-cube Routing. Hyper-cube routing is a mechanism which can mostly be build as an extension to the basic routing mechanism described above. Essentially, rather than growing the node connectivity with the number of parachains and sub-group nodes, we grow only with the logarithm of parachains. Posts may transit between several parachains’ queues on their way to final delivery.
+6.6.4 "Hyper-cube Routing" 
+“Hyper-cube Routing”は、上記の基本的なルーティングメカニズムの拡張として構築できるメカニズムである。本質的にparachainとサブグループの数でノードのコネクティビティを成長させるのではなく、parachainの対数でのみ成長させる。postsは最後のデリバリの途中でいくつかのparachainのキューの間を移動することができる。
 
-Routing itself is deterministic and simple. We begin by limiting the number of bins in the ingress/egress queues; rather than being the total number of parachains, they are the routing-base (b) . This will be fixed as the number of parachains changes, with the routing-exponent (e) instead being raised. Under this model, our message volume grows with O(be), with the pathways remaining constant and the latency (or number of blocks required for delivery) with O(e).
+ルーティング自体は決定論的で単純である。まず入力/出力のbinsの数を制限するところから始める。parachainの総数ではなくルーティングベース(b)である。これはparachainの数が変化すると固定され、代わりに経路指数(e)が上昇する。このモデルの下で、メッセージボリュームはOと共に成長し、経路は一定のままであり、O（e)と共に待ち時間（またはデリバリに必要なブロック数）がある。
 
-Our model of routing is a hypercube of e dimensions, with each side of the cube having b possible locations. Each block, we route messages along a single axis. We alternate the axis in a round-robin fashion, thus guaranteeing worst-case delivery time of e blocks.
+このルーティングモデルはe次元の超立方体であり、立方体の各辺はb個の可能な位置を持つ。ブロックごとに一つの軸に従ってルーティングする。軸をラウンドロビン方式で交代させることで、eブロックの最悪の場合のデリバリ時間を保証する。
 
-As part of the parachain processing, foreign-bound messages found in the ingress queue are routed immediately to the appropriate egress queue’s bin, given the current block number (and thus routing dimension). This process necessitates additional data transfer for each hop on the delivery route, however this is a problem itself which may be mitigated by using some alternative means of data payload delivery and including only a reference, rather than the full payload of the post in the post-trie.
+parachain処理の一部として、current block number（and thus routing dimension）を指定すると、入力キューで見つかった外部バウンドメッセージは適切な出力キューのbinに即座にルーティングされる。このプロセスはデリバリルート上の各ホップに対して追加のデータ転送を必要とするが、これはデータペイロードデリバリを必要とするが、データペイロードデリバリのいくつかの代替手段を使用し、post-trie内のポストの全ペイロードではなく、参照のみを含むことによって緩和されえる問題である。
 
-An example of such a hyper-cube routing for a system with4parachains,b=2ande=2mightbe:
+4 parachains、b=2 、e=2、を使用するシステムでこのようなハイパーキューブルーティングの例を示す。
 
 Phase 0, on each message M:
 • sub0: if Mdest ∈ {2,3} then sendTo(2) else keep • sub1: if Mdest ∈ {2,3} then sendTo(3) else keep • sub2: if Mdest ∈ {0,1} then sendTo(0) else keep • sub3: if Mdest ∈ {0,1} then sendTo(1) else keep
@@ -248,43 +249,41 @@ Phase 0, on each message M:
 Phase 1, on each message M:
 • sub0: if Mdest ∈ {1,3} then sendTo(1) else keep • sub1: if Mdest ∈ {0,2} then sendTo(0) else keep • sub2: if Mdest ∈ {1,3} then sendTo(3) else keep • sub3: if Mdest ∈ {0,2} then sendTo(2) else keep
 
-The two dimensions here are easy to see as the first two bits of the destination index; for the first block, the higher-order bit alone is used. The second block deals with the low-order bit. Once both happen (in arbitrary order) then the post will be routed.
+ここの二つの次元は宛先インデックスの最初の２ビットであることがわかる、最初のブロックでは上位ビットのみが使用される。２番目のブロックは下位ビットを扱う。両方が発生するとポストがルーティングされる。
 
-6.6.5. Maximising Serendipity. One alteration of the basic proposal would see a fixed total of c2 − c validators, with c−1 validators in each sub-group. Each block, rather than there being an unstructured repartitioning of validators among parachains, instead for each parachain sub-group, each validator would be assigned to a unique and different parachain sub-group on the following block. This would lead to the invariant that between any two blocks, for any two pairings of parachain, there exists two validators who have swapped parachain responsibilities. While this cannot be used to gain absolute guarantees on availability (a single validator will occasionally drop offline, even if benevolent), it can nonetheless optimise the general case.
+6.6.5 セレンディピティの最大化。
+基本提案の一の変更は各サブグループにcー１バリデータを有するc２ーcバリデータの固定合計をみることになる。各ブロックはparachain間でバリデータ構造の構造化されていない再分割化があるのではなく、各parachainのサブグループの代わりに、各バリデータは次のブロックの固有の異なるparachainのサブグループに割り当てられる。これは任意の二つのブロックの間に任意の二つのparachainのペアに対して、parachainの責任を交換した２つのバリデータが存在するという不変性に繋がる。これを使用して可用性を絶対的に保証することはできないが（１つのバリデータではたとえ善意であっても時折オフラインになってしまう。）それでも一般的なケースを最適化できる。
 
-This approach is not without complications. The addition of a parachain would also necessitate a reorganisation of the validator set. Furthermore the number of validators, being tied to the square of the number of parachains, would start initially very small and eventually grow far too fast, becoming untenable after around 50 parachains. None of these are fundamental problems. In the first case, reorganisation of validator sets is something that must be done regularly anyway. Regarding the size of the validator set, when too small, multiple validators may be assigned to the same parachain, applying an integer factor to the overall total of validators. A multi-phase routing mechanism such as Hypercube Routing, discussed in 6.6.4 would alleviate the requirement for large number of validators when there is a large number of chains.
+このアプローチには合併症がないわけではない。parachainを追加するとバリデータセットの再編成も必要になる。さらにバリデータの数はparachainの数の２乗に結び付けられているため、最初は非常に小さく始まり、最終的には非常に早く成長し、約５０parachainの後には支持できなくなる。いずれも主要な問題ではない。最初のケースではバリデータセットの再構成はいずれにしても定期的に行う必要がある。バリデータセットのサイズに関してはあまりにも小さい場合、integer factor(整数係数）をバリデータの全体の合計に適用して、複数のバリデータを同じparacahinに割り当てることができる。6.6.4で議論されたハイパーキューブルーティングのような”multi-phase routing mechanism”は多数のチェインがあるとき、多数のバリデータの必要性を軽減するだろう。
 
-6.7. Parachain Validation. A validator’s main purpose is to testify, as a well-bonded actor, that a parachain’s block is valid, including but not limited to any state transition, any external transactions included, the execution of any waiting posts in the ingress queue and the final state of the egress queue. The process itself is fairly simple. Once the validator sealed the previous block they are free to begin working to provide a candidate parachain block candidate for the next round of consensus.
+6.7 Parachain検証：
+バリデータの主な目的はよく結合されたアクターとしてパラチェーンのブロックが有効であることを証明することである。これには状態遷移、含まれる外部トランザクション、入力キュー内の待機ポストの実行、及び出力キュー内の最終状態が含まれる。プロセス自体はかなり単純である。バリデータが前のブロックをシール（封印）すると次のコンセンサスのための候補parachainブロック候補を提供する作業を自由に開始できる。
+最初にバリデータはparachain collatorまたはco-validatersのいずれかを使用して、parachainのブロックの候補を見つける。parachainブロックの候補データはブロックのヘッダ、前のブロックのヘッダ、含まれる外部入力データ(EthereumやBitcoinではこのようなデータはトランザクションと呼ばれるが、原則として任意の目的のために任意のデータ構造を含むことができる。）出力キューデータ、状態遷移有効性を証明する内部データ(Ethereumの場合は、各トランザクションの実行に必要な様々な状態/ストレージ/トライ/ノード）を含む。実証的実験では最近のEthereumブロックに対するこの完全なデータセットが数百KiBであることを示している。
 
-Initially, the validator finds a parachain block candidate through a parachain collator (described next) or one of its co-validators. The parachain block candidate data includes the block’s header, the previous block’s header, any external input data included (for Ethereum and Bitcoin, such data would be referred to as transactions, however in principle they may include arbitrary data structures for arbitrary purposes), egress queue data and internal data to prove state-transition validity (for Ethereum this would be the various state/storage trie nodes required to execute each transaction). Experimental evidence shows this full dataset for a recent Ethereum block to be at the most a few hundred KiB.
+同時にまだ実行されていない場合、バリデータは前のブロックの遷移に関する情報を取得使用とする。最初は前のブロックのバリデータから取得し、後でデータの可用性について署名する全てのバリデータから取得する。
+バリデータがそのような候補ブロックを受け取ると、バリデータはそれをローカルで検証する。検証プロセスはparachainクラスのバリデータモジュールに含まれる。このモジュールは合意に依存するソフトウェアモジュールであり、Polkadot（しかし原理的にはC ABIライブラリは、単一の「参照」の実装のみ持つことから適切な安全性の低下を伴って、単一のライブラリを実装間で共有することを可能にすることができる）の実装のために作成する必要がある。
+このプロセスでは。前のブロックのヘッダが使用され、ハッシュを記録するために最近合意されたリレーチェーンブロックを介してその識別情報が検証される。親のヘッダの正規
+性が確認されると、特定のparacahinクラスの検証関数が呼び出される。これは複数のデータフィールド（以前のものとほぼ同じ）を受け入れ、ブロックの有効性を宣言する単純なブール値を返す単一の関数である。
 
-Simultaneously, if not yet done, the validator will be attempting to retrieve information pertaining to the previous block’s transition, initially from the previous block’s validators and later from all validators signing for the availability of the data.
+このような検証関数のほとんどは、まず親ブロックから直接派生可能なヘッダフィールドをチェックする。（例 親ハッシュ、number)その後、トランザクションやポストを処理するために必要に応じて内部データ構造を設定する。Ethereumのようなチェーンでは、トランザクションの完全な実行に必要なノードをトライ・データベースに格納する。他のタイプには予備メカニズムがあるかもしれない。
 
-Once the validator has received such a candidate block, they then validate it locally. The validation process is contained within the parachain class’s validator module, a consensus-sensitive software module that must be written for any implementation of Polkadot (though in principle a library with a C ABI could enable a single library to be shared between implementations with the appropriate reduction in safety coming from having only a single “reference” implementation).
+完了すると、入力ポストと外部トランザクション（外部データが表すものであれば）が制定され、チェーンの仕様に従ってバランスが取られる。（合理的なデフォルトは外部トランザクションが処理される前に、全ての入力ポストが処理されることを要求するかもしれないがparachainのロジックが決定することである。）この制定により、一連の出力ポストが作成され、これらがcollatorの候補と一致することが検証される。最後に適切に設定されたヘッダが候補のヘッダと照合される。
 
-The process takes the previous block’s header and verifies its identity through the recently agreed relay-chain block in which its hash should be recorded. Once the parent header’s validity is ascertained, the specific parachain class’s validation function may be called. This is a single function accepting a number of data fields (roughly those given previously) and returning a simple Boolean proclaiming the validity of the block.
+完全に検証された候補ブロックを利用して、バリデータはそのヘッダのハッシュに投票し、必要な全ての検証情報をそのサブグループ内のco-validatorsに送信することができる。
 
-Most such validation functions will first check the header-fields which are able to be derived directly from the parent block (e.g. parent hash, number). Following this, they will populate any internal data structures as necessary in order to process transactions and/or posts. For an Ethereum-like chain this amounts to populating a trie database with the nodes that will be needed for the full execution of transactions. Other chain types may have other preparatory mechanisms.
+6.7.1 Parachain
+paracahainのcollatorは現在のブロックチェーンネットワーク上のマイナーの仕事の大半をこなす”unbonded operators”である。これらは特定のparacahainに特異的である。オペレートするためにはリレーチェーンと完全に同期してあるパラチェーンの両方を維持しなければならない。
 
-Once done, the ingress posts and external transactions (or whatever the external data represents) will be enacted, balanced according to chain’s specification. (A sensible default might be to require all ingress posts be processed before external transactions be serviced, however this should be for the parachain’s logic to decide.) Through this enactment, a series of egress posts will be created and it will be verified that these do indeed match the collator’s candidate. Finally, the properly populated header will be checked against the candidate’s header.
+”完全同期”の正確な意味はparacahinのクラスに依存するがparacahin入力キューの現在の状態は常に含まれる。Ethereumの場合、少なくとも最後の数ブロックのMerkleツリーデータベースを維持する必要があるが、アカウントの存在を示すBloomフィルタ、familial 情報、ログ出力、block numberの逆検索テーブルなど、その他様々な可能性がある。
+二つのチェーンの同期を保つことに加えて、それはまた、トランザクションキューを維持し、パブリックネットワークから適切に検証されたトランザクションを受け入れることにによってトランザクションを”fish"しなければならない。キューとチェーンを使用して各ブロックで選択されたバリデータの新しい候補ブロックを作成し（リレーチェーンが同期化されているので、アイデンティティが分かっている）proof-of-validityなどの様々な補助的情報と共にピアネットワーク経由で送信できる。
+トラブルのために含まれている取引に関する全ての手数料を徴収する。この仕組みには様々な経済学が導入されている。過度に競争の激しい市場では、collatorsの余剰性がある場合、特定のcollatorsのブロックを含めるインセンティブを与えるために、取引手数料をparachainバリデータと共有することができる。同様にcollatorsの中にはブロック検証者にとって魅力的なもにするために支払う必要のある料金を引き上げる場合もある。この場合自然市場が形成され、より高い手数料が列に並ばず、より早くチェーンに含まれるべきである。
 
-With a fully validated candidate block, the validator can then vote for the hash of its header and send all requisite validation information to the co-validators in its subgroup.
+6.8 Networking
+ EthereumやBitcoinのような伝統的なブロックチェーン上のネットワークはかなり単純な要件を持っている。全てのトランザクションとブロックは、undirected gossipでブロードキャストされる。同期化は特にEthereumとの同期化より複雑であるが、実際にはこのロジックにはいくつかの要求及び応答メッセージタイプを解決するプロトコル自体ではなく、ピア戦略に含まれていた。
 
-6.7.1. Parachain Collators. Parachain collators are unbonded operators who fulfill much of the task of miners on the present-day blockchain networks. They are specific to a particular parachain. In order to operate they must maintain both the relay-chain and the fully synchronised parachain.
-
-The precise meaning of “fully synchronised” will depend on the class of parachain, though will always include the present state of the parachain’s ingress queue. In Ethereum’s case it also involves at least maintaining a Merkle-tree database of the last few blocks, but might also include various other data structures including Bloom filters for account existence, familial information, logging outputs and reverse lookup tables for block number.
-
-In addition to keeping the two chains synchronised, it must also “fish” for transactions by maintaining a transaction queue and accepting properly validated transactions from the public network. With the queue and chain, it is able to create new candidate blocks for the validators chosen at each block (whose identity is known since the relaychain is synchronised) and submit them, together with the various ancillary information such as proof-of-validity, via the peer network.
-
-For its trouble, it collects all fees relating to the transactions it includes. Various economics float around this arrangement. In a heavily competitive market where there is a surplus of collators, it is possible that the transaction fees be shared with the parachain validators to incentivise the inclusion of a particular collator’s block. Similarly, some collators may even raise the required fees that need to be paid in order to make the block more attractive to validators. In this case, a natural market should form with transactions paying higher fees skipping the queue and having faster inclusion in the chain.
-
-6.8. Networking. Networking on traditional blockchains like Ethereum and Bitcoin has rather simple requirements. All transactions and blocks are broadcast in a simple undirected gossip. Synchronisation is more involved, especially with Ethereum but in reality this logic was contained in the peer strategy rather than the protocol itself which resolved around a few request and answer message types.
-
-While Ethereum made progress on current protocol offerings with the devp2p protocol, which allowed for many subprotocols to be multiplexed over a single peer connection and thus have the same peer overlay support many p2p protocols simultaneously, the Ethereum portion of the protocol still remained relatively simple and the p2p protocol as a while remains unfinished with important functionality missing such as QoS support. Sadly, a desire to create a more ubiquitous “web 3” protocol largely failed, with the only projects using it being those explicitly funded from the Ethereum crowd-sale.
-
-The requirements for Polkadot are rather more substantial. Rather then a wholly uniform network, Polkadot has several types of participants each with different requirements over their peer makeup and several network “avenues” whose participants will tend to converse about particular data. This means a substantially more structured network overlay—and a protocol supporting that— will likely be necessary. Furthermore, extensibility to facilitate future additions such as new kinds of “chain” may themselves require a novel overlay structure.
-
-While an in-depth discussion of how the networking protocol may look is outside of the scope of this document, some requirements analysis is reasonable. We can roughly break down our network participants into two sets (relay-chain, parachains) each of three subsets. We can also state that each of the parachain participants are only interested in conversing between themselves as opposed to participants in other parachains:
+Ethereumは単一のピア接続上で多数のサブプロトコルが多重化することを可能にし、同じピアオーバーレイが多数のp2pプロトコルを同時にサポートするdevp2pプロトコルを使用して、現在のプロトコルオファリングに進化したが、プロトコルのEthereum部分は比較的単純なままであり、p2pプロトコルはQoSサポートなどの重要な機能が欠落したままの未完成のものである。残念なことにもっとユビキタスな”web3”プロトコルを作ろうという試みは大失敗に終わり、それを使っている唯一のプロジェクトはEthereumのクラウドセールから明示的に資金提供されたものだった。
+Polkadotの必要条件はもっと重要だ。完全に統一されたネットワークではなく、Polkadotにはピア構成に対して異なる要件を持つ複数のタイプの参加者と、特定のデータについてconversing(会話する）傾向のある複数のネットワーク”avenues”(大通り）がある。これは実質的により構造化されたネットワークオーバーレイ（及びそれをサポートするプロトコル）が必要になる可能性が高いことを意味する。さらに新しい種類の”chain”のような将来の追加を用意にする拡張性は、それ自体新しいオーバーレイ構造を必要とする可能性がある。
+ネットワークプロトコルがどのようになるかの詳細な議論はこのホワイトペーパーの範囲外であるが、いくつかの必要条件の分析は合理的である。ネットワーク参加者を大まかに３つの部分集合のそれぞれ二つの集合（リーレーチェーン、パラチェーン）に分けることができる。parachainの参加者は他のparachainの参加者とは対照的に、自分自身の間のconversing(会話）にのみ関心があると述べることもできる。
 
 - Relay-chain participants:
 - Validators: P, split into subsets P[s] for each parachain	
@@ -296,7 +295,7 @@ While an in-depth discussion of how the networking protocol may look is outside 
 - Parachain clients: S[0], S[1], . . .
 - Parachain light-clients: L[0], L[1], . . .
 
-In general we name particular classes of communication will tend to take place between members of these sets:
+一般にこれらのセットのメンバー間で発生する傾向のある特定のクラスの通信には次のようなものがある。
 
 - P|A <-> P|A: The full set of validators/guarantors must be well-connected to achieve consensus.
 - P[s] <-> C[s] | P[s]: Each validator as a member of a given parachain group will tend to gossip with other such members as well as the collators of that parachain to discover and share block candidates.
@@ -307,20 +306,21 @@ In general we name particular classes of communication will tend to take place b
 - S[s] <-> S[s] | P[s] | A: Parachain clients disburse data from the validator/guarantors.
 - L[s] <-> L[s] | S[s]: Parachain light clients disburse data from the full clients.
 
-To ensure an efficient transport mechanism, a “flat” overlay network—like Ethereum’s devp2p—where each node does not (non-arbitrarily) differentiate fitness of its peers is unlikely to be suitable. A reasonably extensible peer selection and discovery mechanism will likely need to be included within the protocol as well as aggressive planning an lookahead to ensure the right sort of peers are “serendipitously” connected at the right time.
+効率的な転送メカニズムを保証するには、Ethereumのdevp2pのように、各ノードがピアのfitnessを区別しないフラットなオーバーレイネットワークが適しているとは考えられない。適切なピアが適切なタイミングで”serendipitiously(偶然に)"接続されることを保証するために、積極的に先読み計画するだけでなく、適度に拡張可能なピア選択及び検出メカニズムをプロトコル内に含める必要がある。
 
-The precise strategy of peer make-up will be different for each class of participant: for a properly scaled-out multi-chain, collators will either need to be continuously reconnecting to the accordingly elected validators, or will need on-going agreements with a subset of the validators to ensure they are not disconnected during the vast majority of the time that they are useless for that validator. Collators will also naturally attempt to maintain one or more stable connections into the availability guarantor set to ensure swift propagation of their consensus-sensitive data.
+適切にスケールアウトされたマルチチェーンの場合、collatorsはそれに応じて選択されたバリデータに継続的に再接続する必要があるか、バリデータのサブセットと継続的な合意を必要とし、バリデータが自分自身にとって役に立たない大部分の時間の間、それらが切断されないことを保証する必要がある。またcollatorsは可用性保証セットへの一つ以上の安定した接続を維持し、consensus-sensitiveデータの迅速な伝播を保証しようとする。
 
-Availability guarantors will mostly aim to maintain a stable connection to each other and to validators (for consensus and the consensus-critical parachain data to which they attest), as well as to some collators (for the parachain data) and some fishermen and full clients (for dispersing information). Validators will tend to look for other validators, especially those in the same sub-group and any collators that can supply them with parachain block candidates.
+可用性保証の主な目的は、相互の安定した接続、バリデータ（彼らが証明する合意と合意に不可欠なparachainデータのために）collators(parachain データ用）、fisherman,full client(情報拡散のために）を維持することである。バリデータは他のバリデータ、特に同じサブグループにあるバリデータや、parachainブロック候補を提供できる任意のcollatorsを探す必要がある。
 
-Fishermen, as well as general relay-chain and parachain clients will generally aim to keep a connection open to a validator or guarantor, but plenty of other nodes similar to themselves otherwise. Parachain light clients will similarly aim to be connected to a full client of the parachain, if not just other parachain light-clients.
+fishermanは一般的なリレーチェーンやparachain clientと同様に一般的にバリデータや保証人に接続を開いたままにしておくことを目的とするが、それ以外の点では自分と似た多くのノードある。parachain light clirent は他のparachain light clientだけでなく、parachain full clientに接続されることを同様に目的とする。
 
-6.8.1. The Problem of Peer Churn. In the basic protocol proposal, each of these subsets constantly alter randomly with each block as the validators assigned to verify the parachain transitions are randomly elected. This can be a problem should disparate (non-peer) nodes need to pass data between each other. One must either rely on a fairly-distributed and well-connected peer network to ensure that the hop-distance (and therefore worst-case latency) only grows with the logarithm of the network size (a Kademlia-like protocol [13] may help here), or one must introduce longer block times to allow the necessary connection negotiation to take place to keep a peer-set that reflects the node’s current communication needs.
 
-Neither of these are great solutions: long block times being forced upon the network may render it useless for particular applications and chains. Even a perfectly fair and connected network will result in substantial wastage of bandwidth as it scales due to uninterested nodes having to forward data useless to them.
+6.8.1 Peer Churnの問題　＊churn<-搔きまわす
+基本プロトコル提案では、これらのサブセットの各々は、parachain遷移を検証するために割り当てられたバリデータがランダムに選択されるので、各ブロックで絶えずランダムに変化する。これは異なる（ピアでない）ノード間でデータを渡す必要がある場合に問題になる必要がある。hop-distance(したがって最悪の場合の待ち時間）がネットワークサイズ（ここではKademia-like プロトコルが役に立つかもしれない。）の対数でのみ増加することを保証するために、公平に分散されwell-connectedピアネットワークに頼るか、ノードの現在の通信ニーズを反映するピアセットを維持するために必要な接続ネゴシエーションを行うためにより長いblock timesを導入しなければならない。
 
-While both directions may form part of the solution, a reasonable optimisation to help minimise latency would be to restrict the volatility of these parachain validator sets, either reassigning the membership only between series of blocks (e.g. in groups of 15, which at a 4 second block time would mean altering connections only once per minute) or by rotating membership in an incremental fashion, e.g. changing by one member at a time (e.g. if there are 15 validators assigned to each parachain, then on average it would be a full minute between completely unique sets). By limiting the amount of peer churn, and ensuring that advantageous peer connections are made well in advance through the partial predictability of parachain sets, we can help ensure each node keep a permanently serendipitous selection of peers.
+いずれも優れた解決策ではない。ネットワークに長時間のblock timeがかかると特定のアプリケーションやチェーンでは使用できなくなる可能性がある。完全に公平で接続されたネットワークであっても、関心のないノードが不要なデータを転送しなければならないような拡張が進むと、帯域幅はかなり無駄になる。
 
-6.8.2. Path to an Effective Network Protocol.
+両方向が解決の一部を形成する可能性があるが、待ち時間を最小にするのに役立つ合理的な最適化は、一連のブロックの間だけメンバーシップを再割り当てする（例えば、15のグループでは４秒のblock timeでは、接続の変更は毎分一回のみであることを意味する。）かメンバーシップを増分的に回転させる（例えば、各parachainに15のバリデータが割り当てられているとすると、平均して完全にユニークなセットの間は１分になる）ことによって、これらのparachainバリデータセットのボラティリティを制限することである。”peer churn”の量を制限しparachainセットの部分的な予測可能性を通して有利なピア接続が十分に確立されていることを保証することによって各々ノードが永続的に予期せぬピア選択を維持するのを助けることができる。
 
- Likely the most effective and reasonable development effort will focus on utilising a pre-existing protocol rather than rolling our own. Several peer-to-peer base protocols exist that we may use or augment including Ethereum’s own devp2p [22], IPFS’s libp2p [1] and GNU’s GNUnet [4]. A full review of these protocols and their relevance for building a modular peer network supporting certain structural guarantees, dynamic peer steering and extensible sub-protocols is well beyond the scope of this document but will be an important step in the implementation of Polkadot. 
+6.8.2 有効なネットワークプロトコルへのパス
+おそらく最も効率的で合理的な開発努力は、独自のプロトコルを展開するのではなく、既存のプロトコルを利用することに集中することである。Ethereum独自のdevp2p、IPFSのlibp2p及びGNUのGNUnetを含む、いくつかのp2pベースプロトコルがある。これらのプロトコルと特定の構造的な保証、動的なpeer steering、拡張可能なサブプロトコルをサポートするモジュラーピアネットワークを構築するためのそれらの関連性の完全なレビューはこのホワイトペーパーの範囲をはるかに超えているが、Polkadotの実装の重要なステップである。
