@@ -49,142 +49,57 @@ we foresee the usage of specially formatted logs (events)
 coming from a “break-out contract” to allow a swift verification that a particular message should be forwarded.
 
 ## 5.5.1. PolkadotからEthereum
-Through the choice of a
-BFT consensus mechanism with validators formed from a
-set of stakeholders determined through an approval voting
-mechanism, we are able to get a secure consensus with an
-infrequently changing and modest number of validators.
-In a system with a total of 144 validators, a block time of
-4 seconds and a 900-block finality (allowing for malicious
-behaviour such as double-votes to be reported, punished
-and repaired), the validity of a block can reasonably be
-considered proven through as little as 97 signatures (twothirds of 144 plus one) and a following 60-minute verification period where no challenges are deposited.
-Ethereum is able to host a “break-in contract” which
-can maintain the 144 signatories and be controlled by
-them. Since elliptic curve digital signature (ECDSA) recovery takes only 3,000 gas under the EVM, and since
-we would likely only want the validation to happen on a
-super-majority of validators (rather than full unanimity),
-the base cost of Ethereum confirming that an instruction
-was properly validated as coming from the Polkadot network would be no more than 300,000 gas—a mere 6% of
-the total block gas limit at 5.5M. Increasing the number of validators (as would be necessary for dealing with
-dozens of chains) inevitably increases this cost, however
-it is broadly expected for Ethereum’s transaction bandwidth to grow over time as the technology matures and
-infrastructure improves. Together with the fact that not
-all validators need to be involved (e.g. only the highest
-staked validators may be called upon for such a task) the
-limits of this mechanism extend reasonably well.
-Assuming a daily rotation of such validators (which is
-fairly conservative—weekly or even monthly may be acceptable), then the cost to the network of maintaining
-this Ethereum-forwarding bridge would be around 540,000
-gas per day or, at present gas prices, $45 per year. A basic transaction forwarded alone over the bridge would cost
-around $0.11; additional contract computation would cost
-more, of course. By buffering and bundling transactions
-together, the break-in authorisation costs can easily be
-shared, reducing the cost per transaction substantially;
-if 20 transactions were required before forwarding, then
-the cost for forwarding a basic transaction would fall to
-around $0.01.
-One interesting, and cheaper, alternative to this multisignature contract model would be to use threshold signatures in order to achieve the multi-lateral ownership semantics. While threshold signature schemes for ECDSA
-are computationally expensive, those for other schemes
-such as Schnorr signatures are very reasonable. Ethereum
-plans to introduce primitives which would make such
-schemes cheap to use in the upcoming Metropolis hardfork. If such a means were able to be utilised, the gas costs
-for forwarding a Polkadot transaction into the Ethereum
-network would be dramatically reduced to a near zero
-overhead over and above the basic costs for validating the
-signature and executing the underlying transaction.
+承認投票メカニズムによって決定されたステークホルダーから形成されたバリデータによるBFTコンセンサスメカニズムを通じて、稀にしか変化せずそこまで多くないバリデータで安全
+なコンセンサスを得ることができる。合計144のバリデータ、４秒のブロックタイム、900ブロックのファイナリティ（二重投票などの悪意のある行動、処罰、修復）のシステムでは、ブロッは
+妥当であると考えられる。９７個の署名(twothirds of 144 plus one)と６０分の検証期間（デポジットとチャレンジなし）で問題がないことが証明されました。Ethereumは144人
+の署名者で維持される”break in contract”(侵入契約）をホストすることができる。EVMで ECDSAの回復にかかるガスはわずか3000ガスであるため、検証は（全会一致でなく）
+多くのバリデータによって行われるので、Ethereumの基本コストはPolkadotネットワークからくるのは300,000ガス以下であると正しく検証された。-5.5Mでの総ブロックガスの制限
+はわずか６％　バリデータの数を増やすと（数十のチェーンを処理するのに必要となるように）必然的にこのコストが増加するが、技術の成熟とインフラの向上に伴い、Ethereumのトラ
+ンザクションの帯域幅は徐々に拡大すると予想される。全てのバリデータが関与する必要があるわけではないという事実（例えば、そのようなタスクのために最もステークしたバリデータ
+だけが要求される可能性がある）とともに、このメカニズムの限界は合理的に伸びている。このようなバリデータを毎日ローテーションすることを想定すると（これはかなり保守的で毎週ま
+たは毎月さえも許容可能）このEthereum転送ブリッジは１日あたり約５４万ガス、現在のガスコストでは45ドル。ブリッジを介して単独で転送された基本的なトランザクションはやく0.11
+ドルかかる。コントラクト計算にはもっとコストがかかる。バッファリングしたりトランザクションをまとめることで、侵入承認コストを簡単に共有できトランザクションあたりのコストを大幅に削減できる。20のトランザクションが要求された場合、基本トランザクションの転送コストは約0.01ドルになる。このマルチシグネチャコントラクトモデルに代わる、興味深くて安価な代替手段の一つはmuilti-lateral ownership semanticeを実現するために閾値シグニチャを使用すること。ECDSAの閾値署名方式は計算量が大きくなるがSchnorr署名などの他の方式のものよりは合理的である。Ethereumは今後のMetropolisハードフォークでこのようなスキームを安価に使用できるようにするプリミティブを導入する予定である。そのような手段が利用できれば、PolkadotトランザクションをEthereumネットワークに転送するためのガスコストは大幅に削減され、オーバヘッドはほぼゼロになり、署名を検証しトランザクションを実行する基本的なコストよりは高い。このモデルではPolkadotのバリデータノードはメッセージにサインする以外にほとんど何もする必要がない。Polkadotトランザクションを
+Ethereumネットワークに転送するためのガスコストは署名を検証し、基礎となるトランザクションを実行するための基本コストと比べて大幅に削減され、オーバーヘッドはほぼゼロにな
+る。
+このモデルではPolkadotのバリデータノードは、署名メッセージ以外にほとんど何もする必要がない。トランザクションをEthereumネットワークに実際にルーティングするためには、バリデーター自体もEthereumネットワーク上に存在するか、あるいはもっと可能性が高いのはメッセージをネットワークに転送する最初のアクターに少額の報奨金が提供されるかのいずれ
+かを想定する。
 
-In this model, Polkadot’s validator nodes would have
-to do little other than sign messages. To get the transactions actually routed onto the Ethereum network, we
-assume either validators themselves would also reside on
-the Ethereum network or, more likely, that small bounties
-be offered to the first actor who forwards the message on
-to the network (the bounty could trivially be paid to the
-transaction originator).
+
 
 ## 5.5.2. EthereumからPolkadot
-Getting transactions to be
-forwarded from Ethereum to Polkadot uses the simple notion of logs. When an Ethereum contract wishes to dispatch a transaction to a particular parachain of Polkadot,
-it need simply call into a special “break-out contract”.
-The break-out contract would take any payment that may
-be required and issue a logging instruction so that its existence may be proven through a Merkle proof and an assertion that the corresponding block’s header is valid and
-canonical.
-Of the latter two conditions, validity is perhaps the
-most straightforward to prove. In principle, the only requirement is for each Polkadot node needing the proof
-(i.e. appointed validator nodes) to be running a fully synchronised instance of a standard Ethereum node. Unfortunately, this is itself a rather heavy dependency. A more
-lightweight method would be to use a simple proof that the
-header was evaluated correctly through supplying only the
-part of Ethereum’s state trie needed to properly execute
-the transactions in the block and check that the logs (contained in the block receipt) are valid. Such “SPV-like”6
-proofs may yet require a substantial amount of information; conveniently, they would typically not be needed at
-all: a bond system inside Polkadot would allow bonded
-third-parties to submit headers at the risk of losing their
-bond should some other third-party (such as a “fisherman”, see 6.2.3) provide a proof that the header is invalid
-(specifically that the state root or receipt roots were impostors).
-On a non-finalising PoW network like Ethereum, the
-canonicality is impossible to proof conclusively. To address this, applications that attempt to rely on any kind
-of chain-dependent cause-effect wait for a number of “confirmations”, or until the dependent transaction is at some
-particular depth within the chain. On Ethereum, this
-depth varies from 1 block for the least valuable transactions with no known network issues to 1200 blocks as was
-the case during the initial Frontier release for exchanges.
-On the stable “Homestead” network, this figure sits at
-120 blocks for most exchanges, and we would likely take
-a similar parameter.
-So we can imagine our Polkadot-side Ethereuminterface to have some simple functions: to be able to
-accept a new header from the Ethereum network and validate the PoW, to be able to accept some proof that a
-particular log was emitted by the Ethereum-side breakout contract for a header of sufficient depth (and forward
-the corresponding message within Polkadot) and finally
-to be able to accept proofs that a previously accepted but
-not-yet-enacted header contains an invalid receipt root.
-To actually get the Ethereum header data itself (and
-any SPV proofs or validity/canonicality refutations) into
-the Polkadot network, an incentivisation for forwarding data is needed. This could be as simple as a payment
-(funded from fees collected on the Ethereum side) paid
-to anyone able to forward a useful block whose header is
-valid. Validators would be called upon to retain information relating to the last few thousand blocks in order to
-be able to manage forks, either through some protocolintrinsic means or through a contract maintained on the
-relay chain.
+EthereumからPolkadotにトランザクションを転送するには、単純にログの概念を使用する。Ethereumのコントラクトでは、Polkadotの特定のパラチェーンにトランザクションをディ
+スパッチする場合、特別な”break-out contrat”を呼び出すだけで済む。”break-out contract”は必要とされる可能性のある全ての支払いを受け取り、マークル証明と対応
+するブロックのヘッダが有効かつ正規であるというアサーションによってその存在が証明されるようにロギング命令を発行する。あとの二つの条件のうち、おそらく最も簡単に証明できる
+のは有効性である。原則として、各Polkadotノードに必要なのは、標準Ethereumノードの完全に同期されたインスタンスを実行するための証明（すなわち指定されたバリデータノー
+ド）だけである。残念ながらこれはこれ自体がかなり強い依存関係である。より軽量な方法は、ブロック内のトランザクションを適切に実行し、ログ（ブロック受信に含まれる）が有効である
+ことを確認するために必要なEthereumのstateテストの一部のみを提供することによって、ヘッダが正しく評価されたという簡単な証明を使用すること。このような”SPV-like”6 
+proofsはまだかなりの量の情報が必要である。しかし都合の良いことにこうしたヘッダは一般的に全てを必要としない。すなわちもし他の第三者(fisherなど）がヘッダを無効である
+ことを証明した場合（具体的にはstate rootまたはreceipt rootが正しくない）polkadot内のボンドシステムによってbondを所有する第三者はbondを失う危険を冒してヘッダ
+を提出することができる。Ethereumのようなnon-finalize PoWネットワークでは正規性を完全に証明するのは不可能である。これに対処するために、あらゆる種類のチェーン依存
+の原因と結果に依存しようとするアプリケーションはいくつかの”confirmations”を待つか、依存トランザクションがチェーン内のある特定の深さになるまで待つ。Ethereumではこの
+深さは既知のネットワークの問題がない場合の最も価値の低いトランザクションの１ブロックから交換用に最初にリリースされたFrontireの場合の1200ブロックまで様々である。安定し
+た”Homestead"ネットワークではこの数値はほとんどの交換で120ブロックになり、同様のパラメータをとることになる。したがってPolkadot側Ethereumインターフェースがいくつか
+の単純な機能を持つことを想像することができる。：Ethereumネットワークから新しいヘッダーを受け入れ、POWを検証することができ、十分な深さ（対応するメッセージをPolkadot内
+で転送する。）のヘッダのためにEthreum側の”break out”コントラクトによって特定のログが出力されたという何らかの証明を受け入れることができ、最後に以前に受け入れられた
+がまだ実施されていないヘッダが無効な受信ルートを含むという証明を受け入れることができる。Ethereumヘッダ、データ自体（およびSPVの証明または有効性、妥当性の反論）を実
+際にPolkadotネットワークに取り込むには、データ転送のインセンティブが必要である。これはヘッダが有効で有用なブロックを転送できる誰にでも支払われる支払い（Ethereum側で徴収した料金から資金を得た）もののような単純な支払いである可能性がある。バリデータは何らかのプロトコル固有の手段によって、またはリレーチェーン上で維持されるコントラクトによって、フォークを管理することができるうようにするために最後の数千ブロックに関する情報を保持することが求められる。
+
 
 ## 5.6. PolkadotとBitcoin
-Bitcoin interoperation
-presents an interesting challenge for Polkadot: a so-called
-“two-way peg” would be a useful piece of infrastructure
-to have on the side of both networks. However, due to
-the limitations of Bitcoin, providing such a peg securely is
-a non-trivial undertaking. Delivering a transaction from
-Bitcoin to Polkadot can in principle be done with a process similar to that for Ethereum; a “break-out address”
-controlled in some way by the Polkadot validators could
-receive transferred tokens (and data sent alongside them).
-SPV proofs could be provided by incentivised oracles and,
-together with a confirmation period, a bounty given for
-identifying non-canonical blocks implying the transaction
-has been “double-spent”. Any tokens then owned in the
-“break-out address” would then, in principle, be controlled by those same validators for later dispersal.
-The problem however is how the deposits can be securely controlled from a rotating validator set. Unlike
-Ethereum which is able to make arbitrary decisions based
-upon combinations of signatures, Bitcoin is substantially
-more limited, with most clients accepting only multisignature transactions with a maximum of 3 parties. Extending this to 36, or indeed thousands as might ultimately be desired, is impossible under the current protocol. One option is to alter the Bitcoin protocol to enable
-such functionality, however so-called “hard forks” in the
-Bitcoin world are difficult to arrange judging by recent attempts. One possibility is the use of threshold signatures,
-cryptographic schemes to allow a singly identifiable public
-key to be effectively controlled by multiple secret “parts”,
-some or all of which must be utilised to create a valid signature. Unfortunately, threshold signatures compatible
-with Bitcoin’s ECDSA are computationally expensive to
-create and of polynomial complexity. Other schemes such
-a Schnorr signatures provide far lower costs, however the
-timeline on which they may be introduced into the Bitcoin
-protocol is uncertain.
-Since the ultimate security of the deposits rests with
-a number of bonded validators, one other option is to
-reduce the multi-signature key-holders to only a heavily
-bonded subset of the total validators such that threshold
-signatures become feasible (or, at worst, Bitcoin’s native
-multi-signature is possible). This of course reduces the
-total amount of bonds that could be deducted in reparations should the validators behave illegally, however this
-is a graceful degradation, simply setting an upper limit of
-the amount of funds that can securely run between the
-two networks (or indeed, on the % losses should an attack
-from the validators succeed).
-As such we believe it not unrealistic to place a reasonably secure Bitcoin interoperability “virtual parachain” between the two networks, though nonetheless a substantial effort with an uncertain timeline and quite possibly
-requiring the cooperation of the stakeholders within that
-network.
+BitcoinとのインターオペラビリティはPolkadotにとって興味深い挑戦である。いわゆる”two way peg” は両方のネットワーク側にある有用なインフラストラクチャの一部になるだ
+ろう。しかしBitcoinの限界のためにこのようなペグを安全に提供することは簡単ではない。BitcoinからPolkadotへの取引は原理的にはEthereumと同様のプロセスで行うことが
+できる。Polkadotバリデータによって何らかの方法で制御される”break-out address”は転送されたトークン（データも一緒に送られる）を受け取ることができる。SPVの証明はイ
+ンセンティブ化されたオラクルによって提供され、確認期間と共にトランザクションが”二重消費された”ことを示す非正規ブロックを特定するための報奨金が与えられる。その
+後、”break-out address”で所有されるトークンは原則として後のdispesal(分散?)のために同じバリデータによって制御される。しかし問題はデポジットをローティングバリデー
+タセットから安全に制御する方法である。署名の組み合わせに基づいて任意の決定を行いことができるEthereumとは異なり、Bitcoinは実質的により限定されておりほとんどのクライ
+アントは最大３人のパーティーによる複数の署名のトランザクションしか受け付けない。現在のプロトコルではこれを３６、あるいは最終的に数千に拡張することは不可能である。一つの選
+択肢はBitcoinプロトコルを変更してそのような機能を可能にすることだが、Bitcoinの世界におけるハードフォークは最近の試みから判断すると調整が難しい。一つの可能性は閾値
+署名の使用である。これは単一の識別可能な公開鍵が複数のシークレット”parts”によって効果的に制御されることを可能にする暗号方式であり、そのいくつかまたは全ては有効な署
+名を作成するために利用されなければならない。残念なことにBitcoinのECDSAと互換性のある閾値署名は生成するには計算コストがかかり、多項式の複雑さを伴う。Schnorr署名
+のような他のスキームははるかに低いコストを提供するが、それらがBitcoinプロトコルに導入される時系列は不確実である。デポジットの最終的なセキュリティは多数のバリデータに
+かかっているので、他の一つの選択肢は”multi-signature key-holders”を閾値署名が実現可能になるように全体のバリデータのうちの強固に結合された部分集合のみに減ら
+すことである（あるいは最悪の場合、Bitcoinのネイティブマルチシグネイチャは可能だ。）これはもちろんバリデータが不正に行動した場合に賠償金として差し引かれるbondsの総額
+を減らすが、これはゆうがな低下であり、単に二つのネットワーク間を安全に走ることができる資金量の上限を設定するだけである（あるいはバリデータからの攻撃が成功した場合の％損
+失について）。このように二つのネットワークの間に適度に安全なBitcoinのインターオペラビリティ”virtual parachain”を置くことは非現実ではないと信じておるが、不確実なス
+ケジュールでの相当な努力が必要であり、そのネットワーク内のステークホルダーの協力を必要とする可能性が非常に高い。
+
