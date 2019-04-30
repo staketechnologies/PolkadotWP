@@ -3,8 +3,8 @@
 - 2 INTRODUCTION by [@WatanabeSota](https://twitter.com/WatanabeSota?lang=en)）
 - 3 SUMMARY by [@WatanabeSota](https://twitter.com/WatanabeSota?lang=en)）
 - 4 VALIDATORS by [@WatanabeSota](https://twitter.com/WatanabeSota?lang=en)）
-- 5 DESIGN OVERVIEW by [@WatanabeSota](https://twitter.com/WatanabeSota?lang=en)）
-- 6 PROTOCOL IN DEPTH by [@raika_5179](https://twitter.com/raika_5179?lang=en))
+- 5 DESIGN OVERVIEW by [@WatanabeSota](https://twitter.com/WatanabeSota?lang=en)）, Taki (Twitter[@@takiblockchain](https://twitter.com/takiblockchain?lang=en))
+- 6 PROTOCOL IN DEPTH by [@raika_5179](https://twitter.com/raika_5179?lang=en)), Taki (Twitter[@@takiblockchain](https://twitter.com/takiblockchain?lang=en))
 - 7 INTERCHAIN TRANSACTION PAYMENT by [@raika_5179](https://twitter.com/raika_5179?lang=en))
 - 8 CONCLUSION by [@raika_5179](https://twitter.com/raika_5179?lang=en))
 - APPENDIX A. FUNCTIONAL COMPONENTS by [@raika_5179](https://twitter.com/raika_5179?lang=en))

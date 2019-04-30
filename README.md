@@ -14,6 +14,7 @@
 ## 翻訳者
 - Sota Watanabe（Twitter [@WatanabeSota](https://twitter.com/WatanabeSota?lang=en)）
 - Masaki Minamide (Twitter [@raika_5179](https://twitter.com/raika_5179?lang=en))
+- Taki (Twitter[@@takiblockchain](https://twitter.com/takiblockchain?lang=en))
 
 
 
